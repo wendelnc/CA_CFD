@@ -1,6 +1,6 @@
 # Standard Python Libraries
 import numpy as np
-from numba import njit
+from numba import njit, jit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
@@ -17,33 +17,18 @@ import weno as wn                # Compute WENO Reconstruction
 import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
 
 @njit
-def get_flux(q_sys):
-    '''
-    Function Name:      get_flux
-    Creator:            Carolyn Wendeln
-    Date Created:       03-26-2024
-    Date Last Modified: 03-26-2024
+def RHS(q_sys, q_sys_new, alpha, dt):
 
-    Definition:         get_flux computes the flux of conserved variables
+    for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
 
-    Inputs:             q_sys = [rho, rho*u, E]^T
-
-    Outputs:            f1,f2,f3: fluxes 
-
-    Dependencies:       cons2prim
-    '''
+            # Compute Lax-Friedrichs Flux Vector Splitting
+            f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha)
+            f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha)
+        
+            # f_l = lf.lf_flux(q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],alpha)
+            # f_r = lf.lf_flux(q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3],alpha)
+        
+            # Update Solution
+            q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
     
-    # den, vex, pre = c2p.cons2prim(q_sys)
-    den = q_sys[0]
-    vex   = q_sys[1] / q_sys[0]
-    pre   = (cfg.gamma - 1.) * (q_sys[2] - (0.5 * q_sys[0] * (vex)**2.))
-
-    E = q_sys[2] 
-
-    f1 = den * vex
-    f2 = den * vex * vex + pre 
-    f3 = vex * (E + pre)
-
-    flux = np.array([f1,f2,f3])
-    
-    return flux
+    return q_sys_new

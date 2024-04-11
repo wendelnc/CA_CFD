@@ -33,6 +33,7 @@ p = (γ-1)(E - 0.5*rho*u^2)
 '''
 
 # Standard Python Libraries
+import time
 import numpy as np
 
 # User Defined Libraries
@@ -48,12 +49,15 @@ import w_half as wh              # Compute w_{i+1/2} (or w_{i-1/2})
 import eigenvectors as ev        # Compute Right and Left Eigenvectors
 import weno as wn                # Compute WENO Reconstruction
 import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
+import RHS as rhs                # Compute Right Hand Side
 
 def main():
 
+    start = time.time()
+
     # Initialize the Test Problem
     q_sys = ic.initial_condition()
-
+ 
     # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys,cfg.nx1,cfg.nghost)
 
@@ -81,10 +85,13 @@ def main():
             # Update Solution
             q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
 
+        # q_sys_new =  rhs.RHS(q_sys, q_sys_new, alpha, dt)
         q_sys = np.copy(q_sys_new)
 
         # Update Time Step
         t += dt
+
+    print(f"Finished after {time.time() - start:.5f} seconds")
 
     eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
 

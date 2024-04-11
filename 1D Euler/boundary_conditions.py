@@ -1,10 +1,10 @@
 
 # Standard Python Libraries
-# from numba import njit
+from numba import njit
 
 # User Defined Libraries
 
-# @njit
+@njit
 def boundary_conditions(q_sys,n_ghost,bndc):
     '''
     Function Name:      boundary_conditions

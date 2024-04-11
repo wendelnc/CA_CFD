@@ -1,7 +1,24 @@
+# Standard Python Libraries
+from numba import njit
 
+# User Defined Libraries
+import configuration as cfg      # Input Parameters
+import init as ic                # Initialize Test Problem
+import plotting as eplt          # Plotting Solution
+import ghost as ght              # Add Ghost Cells
+import boundary_conditions as bc # Update Boundary Conditions
+import time_step as ts           # Compute Time Step
+import cons2prim as c2p          # Convert Conserved to Primitive Variables
+import get_flux as gf            # Compute Flux
+import w_half as wh              # Compute w_{i+1/2} (or w_{i-1/2})
+import eigenvectors as ev        # Compute Right and Left Eigenvectors
+import weno as wn                # Compute WENO Reconstruction
+import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
 
-def weno(gp,gm):
-
+@njit
+# def weno(gp,gm):
+def weno(gp0,gp1,gp2,gp3,gp4,gm1,gm2,gm3,gm4,gm5):
+    
     ################################################################################################
     # Lax-Friedrichs splitting
     # f^{±}(u) = 0.5 * (f(u) ± αu)
@@ -15,11 +32,17 @@ def weno(gp,gm):
     # to obtain the cell boundary values : v_{i+1/2}^{-} = f_{i+1/2}^{+}
     ################################################################################################
     
-    vmm = gp[0,:]
-    vm =  gp[1,:]
-    v =   gp[2,:]
-    vp =  gp[3,:]
-    vpp = gp[4,:]
+    # vmm = gp[0,:]
+    # vm =  gp[1,:]
+    # v =   gp[2,:]
+    # vp =  gp[3,:]
+    # vpp = gp[4,:]
+
+    vmm = gp0
+    vm =  gp1
+    v =   gp2
+    vp =  gp3
+    vpp = gp4
 
     beta_0n = (13.0/12.0)*(vmm - 2*vm +   v)**2. + (1.0/4.0)*(vmm - 4*vm + 3*v)**2.
     beta_1n = (13.0/12.0)*(vm  - 2*v  +  vp)**2. + (1.0/4.0)*(vm  - vp)**2.
@@ -48,11 +71,17 @@ def weno(gp,gm):
     # to obtain the cell boundary values : v_{i+1/2}^{+} = f_{i+1/2}^{-}
     ################################################################################################
     
-    umm = gm[0,:]
-    um =  gm[1,:]
-    u =   gm[2,:]
-    up =  gm[3,:]
-    upp = gm[4,:]
+    # umm = gm[0,:]
+    # um =  gm[1,:]
+    # u =   gm[2,:]
+    # up =  gm[3,:]
+    # upp = gm[4,:]
+
+    umm = gm1
+    um =  gm2
+    u =   gm3
+    up =  gm4
+    upp = gm5
 
     beta_0p = (13.0/12.0)*(umm - 2*um +   u)**2. + (1.0/4.0)*(umm - 4*um + 3*u)**2.
     beta_1p = (13.0/12.0)*(um  - 2*u  +  up)**2. + (1.0/4.0)*(um  - up)**2.

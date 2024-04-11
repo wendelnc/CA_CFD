@@ -1,9 +1,11 @@
 # Standard Python Libraries
 import numpy as np
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
 
+@njit
 def time_step(q_sys,t):
 
     # 1) Convert q_sys = [rho, rho*u, E]^T to Primitive Variables w_sys = [rho, u, p]^T
