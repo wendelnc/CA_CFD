@@ -15,7 +15,7 @@ def w_half(q1,q2):
 
     Definition:         w_half computes w_{i+{1/2}} given two conserved variables arrays
 
-    Inputs:             q1: conserved variables at cell q_sys_{j}
+    Inputs:             q1: conserved variables at cell q_sys_{i}
                         q2: conserved variables at cell q_sys_{i+1} 
 
     Outputs:            qavg: average of the conserved variables 
