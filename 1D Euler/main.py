@@ -85,7 +85,6 @@ def main():
             # Update Solution
             q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
 
-        # q_sys_new =  rhs.RHS(q_sys, q_sys_new, alpha, dt)
         q_sys = np.copy(q_sys_new)
 
         # Update Time Step

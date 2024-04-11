@@ -1,20 +1,9 @@
 # Standard Python Libraries
 import numpy as np
-from numba import njit, jit
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
-import init as ic                # Initialize Test Problem
-import plotting as eplt          # Plotting Solution
-import ghost as ght              # Add Ghost Cells
-import boundary_conditions as bc # Update Boundary Conditions
-import time_step as ts           # Compute Time Step
-import cons2prim as c2p          # Convert Conserved to Primitive Variables
-import get_flux as gf            # Compute Flux
-import w_half as wh              # Compute w_{i+1/2} (or w_{i-1/2})
-import eigenvectors as ev        # Compute Right and Left Eigenvectors
-import weno as wn                # Compute WENO Reconstruction
-import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
 
 @njit
 def w_half(q1,q2):
@@ -33,9 +22,6 @@ def w_half(q1,q2):
 
     Dependencies:       cons2prim
     '''
-
-    # rho1, u1, p1 = c2p.cons2prim(q1)
-    # rho2, u2, p2 = c2p.cons2prim(q2)
 
     rho1 = q1[0]
     rho2 = q2[0]
