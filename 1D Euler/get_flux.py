@@ -19,7 +19,7 @@ def get_flux(q_sys):
 
     Outputs:            f1,f2,f3: fluxes 
 
-    Dependencies:       cons2prim
+    Dependencies:       none
     '''
     
     den = q_sys[0]

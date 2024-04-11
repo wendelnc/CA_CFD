@@ -10,7 +10,6 @@ import weno as wn                # Compute WENO Reconstruction
 
 @njit
 def lf_flux(q_arr,alpha):
-# def lf_flux(q0,q1,q2,q3,q4,q5,alpha):
     '''
     Function Name:      lf_flux
     Creator:            Carolyn Wendeln

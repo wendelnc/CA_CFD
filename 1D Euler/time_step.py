@@ -28,7 +28,7 @@ def time_step(q_sys,t):
     # 4) Compute Time Step
     dt = cfg.CFL * cfg.dx / max_speed
 
-    # Stops our td from going past t1
+    # Stops our dt from going past tf
     if t + dt > cfg.tf:
         dt = cfg.tf - t
 

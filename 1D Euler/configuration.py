@@ -19,7 +19,7 @@ x1min = 0.0;    x1max = 1.0
 # Step Size ∆x
 dx = (x1max-x1min)/(nx1)
 
-# Spatial Domain
+# Spatial Domain Grid
 grid = np.linspace(x1min,x1max-dx,nx1)
 
 # Time Domain

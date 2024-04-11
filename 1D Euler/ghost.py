@@ -20,8 +20,8 @@ def add_ghost_cells(q_sys,n_points,n_ghost):
     					          value of zero, and the interior values are those of the input array a
 
                         Our n_points sized array for q:
-								#   #   #   #   #   #   #
-							  |---|---|---|---|---|---|---|
+								                #   #   #   #   #   #   #
+							                |---|---|---|---|---|---|---|
 
                      	Our n_points+2*(n_ghost) array for q_with_ghost
 
