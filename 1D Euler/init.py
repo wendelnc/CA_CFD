@@ -23,11 +23,9 @@ def initial_condition():
 
     q_sys = np.zeros((3,cfg.nx1))
 
-    # q_l and q_r are arrays of
-    # density, velocity, and pressure
-
     if cfg.case == 0:
         # Sod Shock Tube
+        #             ([rho  ,   u,   p])
         q_l = np.array([1.0  , 0.0, 1.0])
         q_r = np.array([0.125, 0.0, 0.1])
 

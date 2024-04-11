@@ -19,8 +19,8 @@ def eigenvectors(u,H,a):
                         H: total enthalpy
                         a: speed of sound
 
-    Outputs:            r: right eigenvectors
-                        l: left eigenvectors
+    Outputs:            R: right eigenvectors
+                        L: left eigenvectors
 
     Dependencies:       none
    
@@ -30,6 +30,7 @@ def eigenvectors(u,H,a):
     http://microcfd.com/download/pdf/AIAA-2001-2609.pdf (See Equations 11 and 16)
     For R we remove the 4th and 5th columns and 2nd and 3rd rows
     For L we remove the 4th and 5th rows and 3rd and 4th columns
+    
      '''
 
     R = np.zeros((3,3),dtype=np.float64)

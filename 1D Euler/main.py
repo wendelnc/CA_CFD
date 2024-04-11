@@ -30,7 +30,7 @@ The equations are closed by the ideal gas law
 
 p = (γ-1)(E - 0.5*rho*u^2)
 
-I am solving this system of equations using a finite difference method with a Lax-Friedrichs Flux Vector Splitting
+I am solving this system of equations using a Finite Difference Lax-Friedrichs Flux Vector Splitting method
 Following Procedure 2.10 from the following paper:
 "Essentially Non-Oscillatory and Weighted Essentially Non-Oscillatory Schemes for Hyperbolic Conservation Laws"
 By: Chi-Wang Shu
@@ -42,7 +42,7 @@ https://www3.nd.edu/~zxu2/acms60790S13/Shu-WENO-notes.pdf
 import time
 import numpy as np
 
-# User Defined Libraries (Not all Needed, but All Defined Here)
+# User Defined Libraries (not all needed, but all defined here)
 import configuration as cfg      # Input Parameters
 import init as ic                # Initialize Test Problem
 import plotting as eplt          # Plotting Solution
@@ -99,10 +99,7 @@ def main():
     print(f"Finished after {time.time() - start:.5f} seconds")
 
     eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
-
-
-
-
+    
 
 if __name__ == "__main__":
     main()

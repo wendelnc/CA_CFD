@@ -21,7 +21,7 @@ def weno(vmm,vm,v,vp,vpp,umm,um,u,up,upp):
     Inputs:             vmm, ... , vpp: positive fluxes for w_{i+1/2}^{-}
                         umm, ... , upp: negative fluxes for w_{i+1/2}^{+}
 
-    Outputs:            wn + wp: result of the WENO reconstruction for i+1/2
+    Outputs:            wn + wp: result of the WENO reconstruction for q_{i+1/2}
 
     Dependencies:       none
 

@@ -18,7 +18,7 @@ def w_half(q1,q2):
     Inputs:             q1: conserved variables at cell q_sys_{i}
                         q2: conserved variables at cell q_sys_{i+1} 
 
-    Outputs:            qavg: average of the conserved variables 
+    Outputs:            averaged values of the conserved variables 
 
     Dependencies:       none
     '''

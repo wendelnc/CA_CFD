@@ -20,7 +20,7 @@ def boundary_conditions(q_sys,n_ghost,bndc):
 
     Outputs:            updated q_sys based on boundary conditions
 
-    Dependencies:       None
+    Dependencies:       none
     '''
 
     # If we have the domain of grid cells denoted by |-----|, |~~~~~| signifies ghost cells

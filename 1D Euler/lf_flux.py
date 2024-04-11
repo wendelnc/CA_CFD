@@ -23,7 +23,7 @@ def lf_flux(q_arr,alpha):
 
     Outputs:            f_hafl: result of the Lax-Friedrichs flux vector splitting
 
-    Dependencies:       cons2prim, get_flux, w_half, eigenvectors
+    Dependencies:       get_flux, w_half, eigenvectors
     '''
 
                   # x_{i+1/2}   # x_{i-1/2}
@@ -76,9 +76,9 @@ def lf_flux(q_arr,alpha):
     gp2 = 0.5 * (gj2 + 1.1 * alpha * vj2)
     gp3 = 0.5 * (gj3 + 1.1 * alpha * vj3)
     gp4 = 0.5 * (gj4 + 1.1 * alpha * vj4)
-    # gp5 = 0.5 * (gj5 + 1.1 * alpha * vj5) # Not needed for WENO
+    # gp5 = 0.5 * (gj5 + 1.1 * alpha * vj5)     # not needed for WENO
 
-    # gm0 = 0.5 * (gj0 - 1.1 * alpha * vj0) # Not needed for WENO
+    # gm0 = 0.5 * (gj0 - 1.1 * alpha * vj0)     # not needed for WENO
     gm1 = 0.5 * (gj1 - 1.1 * alpha * vj1)
     gm2 = 0.5 * (gj2 - 1.1 * alpha * vj2)
     gm3 = 0.5 * (gj3 - 1.1 * alpha * vj3)

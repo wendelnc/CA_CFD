@@ -28,7 +28,7 @@ def add_ghost_cells(q_sys,n_points,n_ghost):
                         0   0   #   #   #   #   #   #   #   0   0
                       |---|---|---|---|---|---|---|---|---|---|---|
 
-    Dependencies:       None
+    Dependencies:       none
     '''
 
     q_sys_with_ghost = np.zeros((3,n_points+(2*n_ghost)))

@@ -78,7 +78,7 @@ def plot_solution(q_sys,t):
 
     Outputs:            image of the solution at given time step
 
-    Dependencies:       none
+    Dependencies:       load_exact
     '''
 
     exact_grid, exact_rho, exact_u, exact_p, exact_E = load_exact(cfg.case)
