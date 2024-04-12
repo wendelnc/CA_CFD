@@ -1,8 +1,10 @@
 # Standard Python Libraries
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
 
+@njit
 def cons2prim(q_sys):
     '''
     Function Name:      cons2prim

@@ -1,5 +1,6 @@
 # Standard Python Libraries
 import numpy as np
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
@@ -10,6 +11,7 @@ import right_eigenvectors as rev # Compute Right Eigenvectors
 import left_eigenvectors as lev  # Compute Left Eigenvectors
 import weno as wn                # Compute WENO Reconstruction
 
+@njit
 def lf_flux(q_arr,nx,ny):
 
                   # x_{i+1/2}   # x_{i-1/2}
@@ -34,13 +36,6 @@ def lf_flux(q_arr,nx,ny):
     den, vex, vey, pre, E, H, a = wh.w_half(q2,q3) 
   
     # (b) Compute the right and left eigenvectors of the flux Jacobian matrix, ∂f/∂x, at x = x_{i+1/2,j}:
-    # if nx == 1.0 and ny == 0.0:
-    #     r = f_Right(vex,vey,a,H)
-    #     l = f_Left(vex,vey,a,H)
-    # else:
-    #     r = g_Right(vex,vey,a,H)
-    #     l = g_Left(vex,vey,a,H)
-
     r = rev.right_eigenvectors(vex,vey,H,a,nx,ny)
     l = lev.left_eigenvectors(vex,vey,H,a,nx,ny)
 
@@ -104,24 +99,20 @@ def lf_flux(q_arr,nx,ny):
     gp2 = 0.5 * (gj2 + 1.1 * alpha2 * vj2)
     gp3 = 0.5 * (gj3 + 1.1 * alpha3 * vj3)
     gp4 = 0.5 * (gj4 + 1.1 * alpha4 * vj4)
-    gp5 = 0.5 * (gj5 + 1.1 * alpha5 * vj5)
-
-    gp = np.array([gp0,gp1,gp2,gp3,gp4,gp5])
+    # gp5 = 0.5 * (gj5 + 1.1 * alpha5 * vj5)     # not needed for WENO
 
     # g^{-}_{j}= 0.5* (g_j - α^{m} v_j)
-    gm0 = 0.5 * (gj0 - 1.1 * alpha0 * vj0)
+    # gm0 = 0.5 * (gj0 - 1.1 * alpha0 * vj0)     # not needed for WENO
     gm1 = 0.5 * (gj1 - 1.1 * alpha1 * vj1)
     gm2 = 0.5 * (gj2 - 1.1 * alpha2 * vj2)
     gm3 = 0.5 * (gj3 - 1.1 * alpha3 * vj3)
     gm4 = 0.5 * (gj4 - 1.1 * alpha4 * vj4)
     gm5 = 0.5 * (gj5 - 1.1 * alpha5 * vj5)
 
-    gm = np.array([gm0,gm1,gm2,gm3,gm4,gm5])
-
     # (e) Perform a WENO reconstruction on each of the computed flux components gj± to obtain 
     # the corresponding component of the numerical flux
 
-    g_half = wn.weno(gp[0:5],gm[1:6])
+    g_half = wn.weno(gp0,gp1,gp2,gp3,gp4,gm1,gm2,gm3,gm4,gm5)
 
     # (f) Project the numerical flux back to the conserved variables
 

@@ -1,9 +1,11 @@
 # Standard Python Libraries
 import numpy as np
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
 
+@njit
 def left_eigenvectors(u,v,H,a,nx,ny):
     '''
     Compute the left eigenvectors of the Euler equations

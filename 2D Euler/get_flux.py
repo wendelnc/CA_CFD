@@ -1,9 +1,11 @@
 # Standard Python Libraries
 import numpy as np
+from numba import njit
 
 # User Defined Libraries
-import cons2prim as c2p          # Convert Conserved to Primitive Variables
+import configuration as cfg      # Input Parameters
 
+@njit
 def get_flux(q_sys,nx,ny):
     '''
     Function Name:      get_flux_half
@@ -17,13 +19,15 @@ def get_flux(q_sys,nx,ny):
 
     Outputs:            f1,f2,f3,f4: fluxes 
 
-    Dependencies:       cons2prim
+    Dependencies:       none
     '''
     
-    den, vex, vey, pre = c2p.cons2prim(q_sys)
-    
+    den = q_sys[0]
+    vex   = q_sys[1] / q_sys[0]
+    vey   = q_sys[2] / q_sys[0]
     E = q_sys[3] 
-
+    pre   = (cfg.gamma - 1.) * (E - (0.5 * den * ((vex)**2. + (vey)**2.)))
+    
     vn = vex * nx + vey * ny
 
     f1 = den * vn

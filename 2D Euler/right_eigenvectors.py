@@ -1,8 +1,10 @@
 # Standard Python Libraries
 import numpy as np
+from numba import njit
 
 # User Defined Libraries
 
+@njit
 def right_eigenvectors(u,v,H,a,nx,ny):
     '''
     Compute the right eigenvectors of the Euler equations

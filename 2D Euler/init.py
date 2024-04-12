@@ -21,8 +21,8 @@ def initial_condition():
     Dependencies:       none
 
     '''
-    
-    q_sys = np.zeros((4,cfg.nx1,cfg.nx2))
+
+    q_sys = np.zeros((4,cfg.nx2,cfg.nx1))
 
     if cfg.case == 0:
         # Setup corresponding to configuration 3 of the paper
@@ -30,58 +30,57 @@ def initial_condition():
         # Numerical solution of the riemann problem for two-dimensional gas dynamics.
         # SIAM Journal on Scientific Computing, 14(6):1394-1414, 1993.
         # Top Right, Top Left, Bottom Left, Bottom Right
-        rho = [1.5, 0.5323, 0.138, 0.5323]
-        u   = [0.0,  1.206, 1.206, 0.0   ]
-        v   = [0.0,    0.0, 1.206, 1.206 ]
-        p   = [1.5,    0.3, 0.029, 0.3   ]
+        rho = [ 1.5, 0.5323, 0.138, 0.5323 ]
+        u   = [ 0.0,  1.206, 1.206, 0.0    ]
+        v   = [ 0.0,    0.0, 1.206, 1.206  ]
+        p   = [ 1.5,    0.3, 0.029, 0.3    ]
 
     if cfg.case == 1:
         # Fig 8. from the following paper
         # https://hal.science/hal-02100764/document
-        rho = [  1.0,  2.0,   1.0,  3.0 ]
-        u   = [ 0.75, 0.75, -0.75, -0.75]
-        v   = [ -0.5,  0.5,   0.5, -0.5 ]
-        p   = [  1.0,  1.0,   1.0,  1.0 ]
+        rho = [  1.0,  2.0,   1.0,  3.0  ]
+        u   = [ 0.75, 0.75, -0.75, -0.75 ]
+        v   = [ -0.5,  0.5,   0.5, -0.5  ]
+        p   = [  1.0,  1.0,   1.0,  1.0  ]
 
     if cfg.case == 2:
         # Fig 8. from the following paper
         # https://hal.science/hal-02100764/document
-        rho = [  1.0,   2.0,  1.0,  3.0 ]
-        u   = [-0.75, -0.75, 0.75,  0.75]
-        v   = [ -0.5,   0.5,  0.5, -0.5 ]
-        p   = [  1.0,   1.0,  1.0,  1.0 ]
+        rho = [   1.0,   2.0,  1.0,  3.0  ]
+        u   = [ -0.75, -0.75, 0.75,  0.75 ]
+        v   = [  -0.5,   0.5,  0.5, -0.5  ]
+        p   = [   1.0,   1.0,  1.0,  1.0  ]
 
     if cfg.case ==3:
         # 1D Sod Shock Tube
-        rho = [  0.125,   1.0,  1.0,  0.125 ]
-        u   = [0,0,0,0]
-        v   = [ 0,0,0,0 ]
-        p   = [  0.1,   1.0,  1.0,  0.1 ] 
+        rho = [ 0.125, 1.0, 1.0, 0.125 ]
+        u   = [   0.0, 0.0, 0.0,   0.0 ]
+        v   = [   0.0, 0.0, 0.0,   0.0 ]
+        p   = [   0.1, 1.0, 1.0,   0.1 ] 
 
     if cfg.case ==4:
         # Rotated 1D Sod Shock Tube
-        rho = [  1.0,   1.0,  0.125,  0.125 ]
-        u   = [0,0,0,0]
-        v   = [ 0,0,0,0 ]
-        p   = [  1.0,   1.0,  0.1,  0.1 ] 
+        rho = [ 0.125, 0.125, 1.0, 1.0 ]
+        u   = [   0.0,   0.0, 0.0, 0.0 ]
+        v   = [   0.0,   0.0, 0.0, 0.0 ]
+        p   = [   0.1,  0.1,  1.0, 1.0 ] 
 
     if cfg.case == 5:
         # Reverse 1D Sod Shock Tube
-        rho = [  1.0,   0.125,  0.125,  1.0 ]
-        u   = [0,0,0,0]
-        v   = [ 0,0,0,0 ]
-        p   = [  1.0,   0.1,  0.1,  1.0 ] 
+        rho = [ 1.0, 0.125, 0.125, 1.0 ]
+        u   = [ 0.0,   0.0,   0.0, 0.0 ]
+        v   = [ 0.0,   0.0,   0.0, 0.0 ]
+        p   = [ 1.0,   0.1,  0.1,  1.0 ] 
     
     if cfg.case == 6:
         # Rotated Reverse 1D Sod Shock Tube
-        rho = [  0.125,   0.125,  1.0,  1.0 ]
-        u   = [0,0,0,0]
-        v   = [ 0,0,0,0 ]
-        p   = [  0.1,   0.1,  1.0,  1.0 ] 
+        rho = [ 1.0, 1.0, 0.125, 0.125 ]
+        u   = [ 0.0, 0.0,   0.0,   0.0 ]
+        v   = [ 0.0, 0.0,   0.0,   0.0 ]
+        p   = [ 1.0, 1.0,   0.1,   0.1 ] 
 
     if cfg.case == 7:
         # Reverse Carsten W. Schulz-Rinne 2D Riemann Problem
-        # Top Right, Top Left, Bottom Left, Bottom Right
         rho = [0.138, 0.5323, 1.5, 0.5323]
         u   = [1.206,  1.206, 0.0, 0.0   ]
         v   = [1.206,    0.0, 0.0, 1.206 ]
@@ -90,7 +89,7 @@ def initial_condition():
     # Define the discontinuity location
     xdist = 0.5
     ydist = 0.5
-    
+
     # Calculate the quadrant indices for each point
     top_right = (cfg.X > xdist) & (cfg.Y > ydist)
     top_left = (cfg.X < xdist) & (cfg.Y > ydist)

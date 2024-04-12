@@ -8,7 +8,8 @@ import numpy as np
 ####################################################################################################
 
 # Number of Spatial Itterations
-nx1 = 32;      nx2 = 32
+# x-direction; y-direction
+nx1 = 128;      nx2 = 128
 
 # Number of Ghost Cells
 nghost = 3
@@ -17,7 +18,7 @@ nghost = 3
 x1min = 0.0;    x1max = 1.0
 x2min = 0.0;    x2max = 1.0
 
-# Step Size ∆x, ∆y
+# Step Size ∆y, ∆x
 dx = (x1max-x1min)/(nx1)
 dy = (x2max-x2min)/(nx2)
 

@@ -9,34 +9,34 @@ We have the equations
 ∂ρ/∂t     + ∂(ρ*u)/∂x         + ∂(ρ*v)/∂y         = 0
 ∂(ρ*u)/∂t + ∂(ρ*u^2 +p)/∂x    + ∂(ρ*u*v)/∂y       = 0
 ∂(ρ*v)/∂t + ∂(ρ*u*v)/∂x       + ∂(ρ*v^2 + p)/∂y   = 0
-∂(ρ*E)/∂t + ∂(u(E + p))/∂x    + ∂(v(E + p))/∂y    = 0
+∂(E)/∂t   + ∂(u(E + p))/∂x    + ∂(v(E + p))/∂y    = 0
 
 These equations are the conservation of mass, momentum, and energy
 
 Or, written slightly different we have
 
-∂q/∂t + ∂f/∂x + ∂g/∂y = 0
+∂Q/∂t + ∂F/∂x + ∂G/∂y = 0
 
 where
 
     |  ρ  |
-q = | ρ*u |
+Q = | ρ*u |
     | ρ*v |
     | ρ*E |
 
     |    ρ*u    |
-f = | ρ*u^2 + p |
+F = | ρ*u^2 + p |
     |   ρ*u*v   |
     |  u*(E+p)  |
 
     |    ρ*v    |
-g = |   ρ*u*v   |
+G = |   ρ*u*v   |
     | ρ*v^2 + p |
     |  v*(E+p)  |
 
 The equations are closed by the ideal gas law
 
-p = (γ-1)(E - 0.5*rho*(u^2+v^2))
+p = (γ-1)(E - 0.5*ρ*(u^2+v^2))
 
 I am solving this system of equations using a Finite Difference Lax-Friedrichs Flux Vector Splitting method
 Following Procedure 2.10 from the following paper:
@@ -64,6 +64,7 @@ import right_eigenvectors as rev # Compute Right Eigenvectors
 import left_eigenvectors as lev  # Compute Left Eigenvectors
 import weno as wn                # Compute WENO Reconstruction
 import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
+import RHS as rhs                # Compute Right Hand Side
 
 def main():
 
@@ -90,18 +91,17 @@ def main():
         q_sys = bc.boundary_conditions(q_sys)
 
         # Compute Time Step ∆t from CFL Condition
-        dt, alpha_x, alpha_y = ts.time_step(q_sys,t)
+        dt = ts.time_step(q_sys,t)
+        
+        for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
+            for j in range(cfg.nghost,cfg.nx2+cfg.nghost):
 
-        for i in range(cfg.nghost,cfg.nx2+cfg.nghost):
-            for j in range(cfg.nghost,cfg.nx1+cfg.nghost):
+                f_l = lf.lf_flux(np.array([q_sys[:,j,i-3],q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2]]),1,0)
+                f_r = lf.lf_flux(np.array([q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2],q_sys[:,j,i+3]]),1,0)
+                g_l = lf.lf_flux(np.array([q_sys[:,j-3,i],q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i]]),0,1)
+                g_r = lf.lf_flux(np.array([q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i],q_sys[:,j+3,i]]),0,1)
 
-                # Euler Equations
-                f_l = lf.lf_flux(np.array([q_sys[:,i-3,j],q_sys[:,i-2,j],q_sys[:,i-1,j],q_sys[:,i,j],q_sys[:,i+1,j],q_sys[:,i+2,j]]),0,1)
-                f_r = lf.lf_flux(np.array([q_sys[:,i-2,j],q_sys[:,i-1,j],q_sys[:,i,j],q_sys[:,i+1,j],q_sys[:,i+2,j],q_sys[:,i+3,j]]),0,1)
-                g_l = lf.lf_flux(np.array([q_sys[:,i,j-3],q_sys[:,i,j-2],q_sys[:,i,j-1],q_sys[:,i,j],q_sys[:,i,j+1],q_sys[:,i,j+2]]),1,0)
-                g_r = lf.lf_flux(np.array([q_sys[:,i,j-2],q_sys[:,i,j-1],q_sys[:,i,j],q_sys[:,i,j+1],q_sys[:,i,j+2],q_sys[:,i,j+3]]),1,0)
-
-                q_sys_new[:,i,j] = q_sys[:,i,j] - ((dt)/(cfg.dx))*(f_r - f_l)  -  ((dt)/(cfg.dy))*(g_r - g_l) 
+                q_sys_new[:,j,i] = q_sys[:,j,i] - ((dt)/(cfg.dx))*(f_r - f_l)  -  ((dt)/(cfg.dy))*(g_r - g_l) 
 
         q_sys = np.copy(q_sys_new)
 
@@ -115,6 +115,12 @@ def main():
         # eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
         eplt.plot_den_contour(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
     
+    # 1D Sod Shock Tube
+    if cfg.case == 3 or cfg.case == 5: 
+        eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
+    elif cfg.case == 4 or cfg.case == 6:
+        eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
+
 
 if __name__ == "__main__":
     main()
