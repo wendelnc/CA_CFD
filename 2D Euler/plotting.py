@@ -28,7 +28,7 @@ def plot_prim(q_sys,t):
     v   = q_sys[2] / q_sys[0]
     p   = (cfg.gamma - 1.) * (q_sys[3] - (0.5 * q_sys[0] * ((u)**2. + (v)**2.)))
     
-    fig, plots = plt.subplots(2, 2, gridspec_kw={'width_ratios': [1, 1], 'wspace': 0.0})
+    fig, plots = plt.subplots(2, 2, gridspec_kw={'width_ratios': [1, 1], 'wspace': 0.0}, figsize=(10, 10))
 
     fig.suptitle('Solution at t = %.3f' % t)
 

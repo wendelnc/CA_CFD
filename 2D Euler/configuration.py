@@ -9,7 +9,7 @@ import numpy as np
 
 # Number of Spatial Itterations
 # x-direction; y-direction
-nx1 = 128;      nx2 = 128
+nx1 = 64;      nx2 = 64
 
 # Number of Ghost Cells
 nghost = 3
@@ -30,7 +30,7 @@ ygrid = np.linspace(0, 1, nx2)
 X, Y = np.meshgrid(xgrid, ygrid)
 
 # Time Domain
-ti = 0.0;   tf = 0.30
+ti = 0.0;   tf = 0.15
 
 # Courant-Friedrichs-Lewy (CFL) condition
 CFL = 0.1
@@ -42,8 +42,8 @@ gamma = 1.4
 # Define Our Test Problem
 ####################################################################################################
 
-case = 0 # Carsten W. Schulz-Rinne 2D Riemann Problem
-# case = 1 # Deng, X. Fig 8 2D Riemann Problem
+# case = 0 # Carsten W. Schulz-Rinne 2D Riemann Problem
+case = 1 # Deng, X. Fig 8 2D Riemann Problem
 # case = 2 # Deng, X. Fig 9 2D Riemann Problem
 # case = 3 # 1D Sod Shock Tube
 # case = 4 # Rotated 1D Sod Shock Tube

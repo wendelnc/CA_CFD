@@ -8,7 +8,7 @@ import numpy as np
 ####################################################################################################
 
 # Number of Spatial Itterations
-nx1 = 128
+nx1 = 64
 
 # Number of Ghost Cells
 nghost = 3

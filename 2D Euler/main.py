@@ -91,7 +91,7 @@ def main():
         q_sys = bc.boundary_conditions(q_sys)
 
         # Compute Time Step ∆t from CFL Condition
-        dt = ts.time_step(q_sys,t)
+        dt, alpha_x, alpha_y = ts.time_step(q_sys,t)
         
         for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
             for j in range(cfg.nghost,cfg.nx2+cfg.nghost):
@@ -105,6 +105,9 @@ def main():
 
         q_sys = np.copy(q_sys_new)
 
+        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+
+        asdf
         # Update Time Step
         t += dt
 
@@ -118,8 +121,11 @@ def main():
     # 1D Sod Shock Tube
     if cfg.case == 3 or cfg.case == 5: 
         eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
+        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+
     elif cfg.case == 4 or cfg.case == 6:
         eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
+        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
 
 
 if __name__ == "__main__":

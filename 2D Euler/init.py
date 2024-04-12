@@ -44,7 +44,7 @@ def initial_condition():
         p   = [  1.0,  1.0,   1.0,  1.0  ]
 
     if cfg.case == 2:
-        # Fig 8. from the following paper
+        # Fig 9. from the following paper
         # https://hal.science/hal-02100764/document
         rho = [   1.0,   2.0,  1.0,  3.0  ]
         u   = [ -0.75, -0.75, 0.75,  0.75 ]
@@ -81,10 +81,10 @@ def initial_condition():
 
     if cfg.case == 7:
         # Reverse Carsten W. Schulz-Rinne 2D Riemann Problem
-        rho = [0.138, 0.5323, 1.5, 0.5323]
-        u   = [1.206,  1.206, 0.0, 0.0   ]
-        v   = [1.206,    0.0, 0.0, 1.206 ]
-        p   = [0.029,    0.3, 1.5, 0.3   ]        
+        rho = [ 0.138, 0.5323, 1.5, 0.5323 ]
+        u   = [ 1.206,    0.0, 0.0,  1.206 ]
+        v   = [ 1.206,  1.206, 0.0,    0.0 ]
+        p   = [ 0.029,    0.3, 1.5,    0.3 ]        
 
     # Define the discontinuity location
     xdist = 0.5
