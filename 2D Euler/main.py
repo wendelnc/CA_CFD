@@ -96,18 +96,15 @@ def main():
         for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
             for j in range(cfg.nghost,cfg.nx2+cfg.nghost):
 
-                f_l = lf.lf_flux(np.array([q_sys[:,j,i-3],q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2]]),1,0)
-                f_r = lf.lf_flux(np.array([q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2],q_sys[:,j,i+3]]),1,0)
-                g_l = lf.lf_flux(np.array([q_sys[:,j-3,i],q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i]]),0,1)
-                g_r = lf.lf_flux(np.array([q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i],q_sys[:,j+3,i]]),0,1)
+                f_l = lf.lf_flux(np.array([q_sys[:,j,i-3],q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2]]),alpha_x,1,0)
+                f_r = lf.lf_flux(np.array([q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2],q_sys[:,j,i+3]]),alpha_x,1,0)
+                g_l = lf.lf_flux(np.array([q_sys[:,j-3,i],q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i]]),alpha_y,0,1)
+                g_r = lf.lf_flux(np.array([q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i],q_sys[:,j+3,i]]),alpha_y,0,1)
 
                 q_sys_new[:,j,i] = q_sys[:,j,i] - ((dt)/(cfg.dx))*(f_r - f_l)  -  ((dt)/(cfg.dy))*(g_r - g_l) 
 
         q_sys = np.copy(q_sys_new)
 
-        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
-
-        asdf
         # Update Time Step
         t += dt
 

@@ -22,18 +22,14 @@ def time_step(q_sys,t):
 
     alpha_x = np.array([max_u1,max_u2,max_u2,max_u3])
 
-    max_x = np.max(np.array([max_u1,max_u2,max_u2,max_u3]))
-
     max_v1 = np.max(np.abs(all_vey - a))
     max_v2 = np.max(np.abs(all_vey))
     max_v3 = np.max(np.abs(all_vey + a))
 
     alpha_y = np.array([max_v1,max_v2,max_v2,max_v3])
-
-    max_y = np.max(np.array([max_v1,max_v2,max_v2,max_v3]))
     
     # 4) Compute Time Step
-    dt = cfg.CFL * (cfg.dx / max_x + cfg.dy / max_y)
+    dt = cfg.CFL * (cfg.dx / np.max(alpha_x) + cfg.dy / np.max(alpha_y))
 
     # Stops our td from going past t1
     if t + dt > cfg.tf:

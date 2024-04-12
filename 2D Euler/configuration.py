@@ -43,10 +43,10 @@ gamma = 1.4
 ####################################################################################################
 
 # case = 0 # Carsten W. Schulz-Rinne 2D Riemann Problem
-case = 1 # Deng, X. Fig 8 2D Riemann Problem
+# case = 1 # Deng, X. Fig 8 2D Riemann Problem
 # case = 2 # Deng, X. Fig 9 2D Riemann Problem
 # case = 3 # 1D Sod Shock Tube
-# case = 4 # Rotated 1D Sod Shock Tube
+case = 4 # Rotated 1D Sod Shock Tube
 # case = 5 # Reverse 1D Sod Shock Tube
 # case = 6 # Rotated Reverse 1D Sod Shock Tube
 # case = 7 # Reverse Carsten W. Schulz-Rinne 2D Riemann Problem

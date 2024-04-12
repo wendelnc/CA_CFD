@@ -98,8 +98,8 @@ def main():
 
     print(f"Finished after {time.time() - start:.5f} seconds")
 
-    eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
-    
+    eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],t)
+
 
 if __name__ == "__main__":
     main()
