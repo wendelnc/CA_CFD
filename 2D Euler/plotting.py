@@ -1,7 +1,10 @@
 # Standard Python Libraries
 import os
 import numpy as np
+import datetime
+from time import time, sleep
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
@@ -68,7 +71,7 @@ def plot_den_contour(q_sys,t):
     fig = plt.figure(figsize=(7,7), dpi=100)
     plt.imshow(rho,extent=[0,1,0,1],origin='lower')
     plt.title('Density at t = %.3f' % t)
-    contour = plt.contour(rho,extent=[0,1,0,1], cmap='turbo', levels=10)
+    contour = plt.contour(rho,extent=[0,1,0,1], cmap='turbo', levels=25)
     plt.clabel(contour, inline=False, fontsize=12, colors = 'black')
 
     plt.show()
@@ -147,6 +150,212 @@ def plot_1D(q_sys,t):
     plots[1][1].legend()
 
     plt.show()
+
+def movie_maker(all_solns,all_t):
+    '''
+    Function Name:      movie_maker
+    Creator:            Carolyn Wendeln
+    Date Created:       02-15-2023
+    Date Last Modified: 04-24-2023
+
+    Definition:         movie_maker plots the primative variables for the Euler Equaitons
+
+    Inputs:             all_solns: list of the solution at every time step
+                        all_t: list of all the time steps
+
+    Outputs:            movie labeled movie_title
+
+    Dependencies:       none
+    '''
+
+    # Get the current date and time
+    current_datetime = datetime.datetime.now()
+
+    # Convert the datetime object to a string
+    movie_title = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    movie_title = movie_title + ".mp4"
+
+    # Create a figure and axis for plotting
+    fig, plots = plt.subplots(2, 2, gridspec_kw={'width_ratios': [1, 1], 'wspace': 0.0})
+
+    n_steps = len(all_t)
+
+    q_sys = all_solns[0]
+
+    rho = q_sys[0]
+    u   = q_sys[1] / q_sys[0]
+    v   = q_sys[2] / q_sys[0]
+    p   = (cfg.gamma - 1.) * (q_sys[3] - (0.5 * q_sys[0] * ((u)**2. + (v)**2.)))
+
+    fig.suptitle('Solution at t = %.3f' % all_t[0])
+
+    im1 = plots[0][0].imshow(rho, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[0][0].set_ylabel('y')
+    plots[0][0].set_title('Density')
+    cbar1 = fig.colorbar(im1, ax=plots[0][0])
+    cbar1.set_label(' ')
+
+    im2 = plots[0][1].imshow(p, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[0][1].set_yticklabels([])
+    plots[0][1].set_title('Pressure')
+    cbar2 = fig.colorbar(im2, ax=plots[0][1])
+    cbar2.set_label(' ')
+
+    im3 = plots[1][0].imshow(u, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[1][0].set_xlabel('x')
+    plots[1][0].set_ylabel('y')
+    plots[1][0].set_title('X Velocity')
+    cbar3 = fig.colorbar(im3, ax=plots[1][0])
+    cbar3.set_label(' ')
+
+    im4 = plots[1][1].imshow(v, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[1][1].set_xlabel('x')
+    plots[1][1].set_yticklabels([])
+    plots[1][1].set_title('Y Velocity')
+    cbar4 = fig.colorbar(im4, ax=plots[1][1])
+    cbar4.set_label(' ')
+
+    fig.subplots_adjust(wspace=0.2, hspace=0.3)
+
+    def animate(i):
+        ''' function to update the plot for each frame  '''
+
+        q_sys = all_solns[i]
+
+        rho = q_sys[0]
+        u   = q_sys[1] / q_sys[0]
+        v   = q_sys[2] / q_sys[0]
+        p   = (cfg.gamma - 1.) * (q_sys[3] - (0.5 * q_sys[0] * ((u)**2. + (v)**2.)))
+
+        fig.suptitle('Solution at t = %.3f' % all_t[i])
+
+        im1.set_array(rho)
+        im1.set_clim(vmin=rho.min(), vmax=rho.max())
+
+        im2.set_array(p)
+        im2.set_clim(vmin=p.min(), vmax=p.max())
+
+        im3.set_array(u)
+        im3.set_clim(vmin=u.min(), vmax=u.max())
+
+        im4.set_array(v)
+        im4.set_clim(vmin=v.min(), vmax=v.max())
+
+        fig.subplots_adjust(wspace=0.2, hspace=0.3)
+
+    # Create the animation using matplotlib's FuncAnimation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=100)
+
+    folder_path = os.path.join(os.getcwd(), "animations")
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    file_path = os.path.join(folder_path, movie_title)
+
+    print("Saving the Primative Plot...")
+    # Save the animation as a video file
+    
+    ani.save(file_path,writer='ffmpeg', dpi=500)
+
+def movie_maker_den(all_solns,all_t):
+    '''
+    Function Name:      movie_maker_den
+    Creator:            Carolyn Wendeln
+    Date Created:       02-15-2023
+    Date Last Modified: 04-24-2023
+
+    Definition:         movie_maker_den plots contour lines for the density for the Euler Equaitons
+
+    Inputs:             all_solns: list of the solution at every time step
+                        all_t: list of all the time steps
+
+    Outputs:            movie labeled movie_title
+
+    Dependencies:       none
+    '''
+
+    # Get the current date and time
+    current_datetime = datetime.datetime.now()
+
+    # Convert the datetime object to a string
+    movie_title = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    movie_title = movie_title + ".mp4"
+
+    # fig, ax = plt.figure(figsize=(8,8), dpi=100)
+    # fig, ax = plt.subplots(figsize=(8,8), dpi=100)
+
+    n_steps = len(all_t)
+
+    q_sys = all_solns[0]
+
+    rho = q_sys[0]
+
+    fig, ax = plt.subplots()
+    im1 = ax.imshow(rho,origin='lower')
+
+    im1.axes.set_xticklabels([])
+    im1.axes.set_yticklabels([])
+
+    fig.colorbar(im1, ax=ax)
+
+    contour_lines = ax.contour(rho,cmap='turbo', levels=25)
+
+    contour_labels = plt.clabel(contour_lines, inline=False, fontsize=12, colors = 'black')
+
+    for coll in contour_lines.collections:
+        coll.remove()
+
+    for coll in contour_labels:
+        coll.remove()
+        
+    def animate(i):
+        ''' Function to update the plot for each frame '''
+        global contour_lines
+        global contour_labels
+        
+        q_sys = all_solns[i]
+
+        rho = q_sys[0]
+        
+        # Update the image
+        im1.set_array(rho)
+        im1.set_clim(vmin=rho.min(), vmax=rho.max())
+
+        im1.axes.set_xticklabels([])
+        im1.axes.set_yticklabels([])
+        
+        if 'contour_lines' not in globals():
+            contour_lines = ax.contour(rho,cmap='turbo', levels=15)
+        else:
+            # Update the contour lines
+            for coll in contour_lines.collections:
+                coll.remove()
+            contour_lines = ax.contour(rho,cmap='turbo', levels=15)
+
+        if 'contour_labels' not in globals():
+            contour_labels = plt.clabel(contour_lines, inline=False, fontsize=12, colors = 'black')
+        else:
+            for coll in contour_labels:
+                coll.remove()
+            contour_labels = plt.clabel(contour_lines, inline=False, fontsize=12, colors = 'black')
+
+        # Update the title
+        ax.set_title('Solution at t = %.3f' % all_t[i])
+
+        return contour_lines
+
+    # Create the animation using matplotlib's FuncAnimation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=100)
+
+    folder_path = os.path.join(os.getcwd(), "animations")
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    file_path = os.path.join(folder_path, movie_title)
+
+    print("Saving the Contour Plot...")
+    # Save the animation as a video file
+    ani.save(file_path,writer='ffmpeg', dpi=500)
 
 
 

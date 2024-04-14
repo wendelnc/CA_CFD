@@ -60,6 +60,55 @@ def lf_flux(q_arr,alpha,nx,ny):
     # g^{±}_{j}= 0.5* (g_j ± α^{m} v_j) where α(m) = max_k | λ^{m} q_k | 
     # is the maximal wave speed of the m^{th} component of characteristic variables over all grid points
 
+    # First we need α(m)
+    # Compute the primitive variables at each grid point: 
+    # rho0, u0, v0, p0 = c2p.cons2prim(q0)
+    # rho1, u1, v1, p1 = c2p.cons2prim(q1)
+    # rho2, u2, v2, p2 = c2p.cons2prim(q2)
+    # rho3, u3, v3, p3 = c2p.cons2prim(q3)
+    # rho4, u4, v4, p4 = c2p.cons2prim(q4)
+    # rho5, u5, v5, p5 = c2p.cons2prim(q5)
+
+    # # Sound speed at each grid point:
+    # a0 = np.sqrt(cfg.gamma * p0 / rho0)
+    # a1 = np.sqrt(cfg.gamma * p1 / rho1)
+    # a2 = np.sqrt(cfg.gamma * p2 / rho2)
+    # a3 = np.sqrt(cfg.gamma * p3 / rho3)
+    # a4 = np.sqrt(cfg.gamma * p4 / rho4)
+    # a5 = np.sqrt(cfg.gamma * p5 / rho5)
+
+    # # Normalized velocity at each grid point:
+    # vn0 = u0 * nx + v0 * ny
+    # vn1 = u1 * nx + v1 * ny
+    # vn2 = u2 * nx + v2 * ny
+    # vn3 = u3 * nx + v3 * ny
+    # vn4 = u4 * nx + v4 * ny
+    # vn5 = u5 * nx + v5 * ny
+
+    # # α^{m} at each grid point:
+    # alpha0 = np.array([np.abs(vn0 - a0), np.abs(vn0), np.abs(vn0), np.abs(vn0 + a0)])
+    # alpha1 = np.array([np.abs(vn1 - a1), np.abs(vn1), np.abs(vn1), np.abs(vn1 + a1)])
+    # alpha2 = np.array([np.abs(vn2 - a2), np.abs(vn2), np.abs(vn2), np.abs(vn2 + a2)])
+    # alpha3 = np.array([np.abs(vn3 - a3), np.abs(vn3), np.abs(vn3), np.abs(vn3 + a3)])
+    # alpha4 = np.array([np.abs(vn4 - a4), np.abs(vn4), np.abs(vn4), np.abs(vn4 + a4)])
+    # alpha5 = np.array([np.abs(vn5 - a5), np.abs(vn5), np.abs(vn5), np.abs(vn5 + a5)])
+
+    # # g^{+}_{j}= 0.5* (g_j + α^{m} v_j)
+    # gp0 = 0.5 * (gj0 + 1.1 * alpha0 * vj0)
+    # gp1 = 0.5 * (gj1 + 1.1 * alpha1 * vj1)
+    # gp2 = 0.5 * (gj2 + 1.1 * alpha2 * vj2)
+    # gp3 = 0.5 * (gj3 + 1.1 * alpha3 * vj3)
+    # gp4 = 0.5 * (gj4 + 1.1 * alpha4 * vj4)
+    # gp5 = 0.5 * (gj5 + 1.1 * alpha5 * vj5)
+
+    # g^{-}_{j}= 0.5* (g_j - α^{m} v_j)
+    # gm0 = 0.5 * (gj0 - 1.1 * alpha0 * vj0)
+    # gm1 = 0.5 * (gj1 - 1.1 * alpha1 * vj1)
+    # gm2 = 0.5 * (gj2 - 1.1 * alpha2 * vj2)
+    # gm3 = 0.5 * (gj3 - 1.1 * alpha3 * vj3)
+    # gm4 = 0.5 * (gj4 - 1.1 * alpha4 * vj4)
+    # gm5 = 0.5 * (gj5 - 1.1 * alpha5 * vj5)
+
     gp0 = 0.5 * (gj0 + 1.1 * alpha * vj0)
     gp1 = 0.5 * (gj1 + 1.1 * alpha * vj1)
     gp2 = 0.5 * (gj2 + 1.1 * alpha * vj2)

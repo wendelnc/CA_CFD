@@ -85,6 +85,11 @@ def main():
 
     t = cfg.ti
 
+    all_solns = []
+    all_t = []
+    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
+    all_t.append(t)
+
     while t < (cfg.tf):
         
         # Update Boundary Conditions 
@@ -105,24 +110,33 @@ def main():
 
         q_sys = np.copy(q_sys_new)
 
+
         # Update Time Step
         t += dt
 
+        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
+        all_t.append(t)
+
     print(f"Finished after {time.time() - start:.5f} seconds")
 
+    print("let's make some movies!")
+
+    eplt.movie_maker(all_solns,all_t)
+    eplt.movie_maker_den(all_solns,all_t)
+
     # 2D Riemann Problems
-    if cfg.case == 0 or cfg.case == 1 or cfg.case == 2 or cfg.case == 7:
-        # eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
-        eplt.plot_den_contour(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    # if cfg.case == 0 or cfg.case == 1 or cfg.case == 2 or cfg.case == 7 or cfg.case == 8:
+    eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    eplt.plot_den_contour(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
     
     # 1D Sod Shock Tube
-    if cfg.case == 3 or cfg.case == 5: 
-        eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
-        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    # if cfg.case == 3 or cfg.case == 5: 
+    #     eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
+    #     eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
 
-    elif cfg.case == 4 or cfg.case == 6:
-        eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
-        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    # elif cfg.case == 4 or cfg.case == 6:
+    #     eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
+    #     eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
 
 
 if __name__ == "__main__":
