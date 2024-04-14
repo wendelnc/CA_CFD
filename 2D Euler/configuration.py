@@ -24,8 +24,8 @@ dx = (x1max-x1min)/(nx1)
 dy = (x2max-x2min)/(nx2)
 
 # Spatial Domain Grid
-xgrid = np.linspace(0, 1, nx1)
-ygrid = np.linspace(0, 1, nx2)
+xgrid = np.linspace(x1min, x1max, nx1)
+ygrid = np.linspace(x2min, x2max, nx2)
 
 # Create the meshgrid
 X, Y = np.meshgrid(xgrid, ygrid)
