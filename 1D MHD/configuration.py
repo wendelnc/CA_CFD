@@ -9,13 +9,13 @@ import numpy as np
 
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
-nx1 = 32;     nx2 = 32;    nx3 = 32
+nx1 = 1024;     nx2 = 32;    nx3 = 32
 
 # Number of Ghost Cells
 nghost = 3
 
 # Spatial Domain
-x1min = -1.0;    x1max = 1.0
+x1min = -5.0;    x1max = 5.0
 x2min = -1.0;    x2max = 1.0
 x3min = -1.0;    x3max = 1.0
 
@@ -30,13 +30,14 @@ ygrid = np.linspace(x2min, x2max, nx2)
 zgrid = np.linspace(x3min, x3max, nx3)
 
 # Initial Time 
-ti = 0.0; tf = 0.15
+ti = 0.0; tf = 0.2
 
 # Courant-Friedrichs-Lewy (CFL) condition
 CFL = 0.1
 
 # Heat Capacity Ratio
-gamma = 1.4
+# gamma = 5.0/3.0
+gamma = 2.0
 
 ####################################################################################################
 # Define Our Test Problem
@@ -50,3 +51,4 @@ case = 0  # Brio & Wu Shock Tube
 
 # bndc = 0 # Periodic Boundary Conditions
 bndc = 1 # Reflective Boundary Conditions
+# bndc = 2 # Dirichlet Boundary Conditions (for Brio-Wu Shock Tube)
