@@ -157,59 +157,35 @@ def initial_condition():
         u   = [  0.1, -0.6259,  0.1,    0.1 ]
         v   = [ -0.3,    -0.3, -0.3, 0.4276 ]
         p   = [  1.0,     0.4,  0.4,    0.4 ]
-
-    # if cfg.case == :
-    #     # Configuration  from the following paper
-    #     # https://www.math.umd.edu/~tadmor/pub/central-schemes/Kurganov-Tadmor.NMPDEs02.pdf
-    #     rho = []
-    #     u   = []
-    #     v   = []
-    #     p   = []
     
+    if cfg.case ==16:
+        # 1D Sod Shock Tube
+        rho = [ 0.125, 1.0, 1.0, 0.125 ]
+        u   = [   0.0, 0.0, 0.0,   0.0 ]
+        v   = [   0.0, 0.0, 0.0,   0.0 ]
+        p   = [   0.1, 1.0, 1.0,   0.1 ] 
 
-    # if cfg.case ==3:
-    #     # 1D Sod Shock Tube
-    #     rho = [ 0.125, 1.0, 1.0, 0.125 ]
-    #     u   = [   0.0, 0.0, 0.0,   0.0 ]
-    #     v   = [   0.0, 0.0, 0.0,   0.0 ]
-    #     p   = [   0.1, 1.0, 1.0,   0.1 ] 
+    if cfg.case == 17:
+        # Rotated 1D Sod Shock Tube
+        rho = [ 0.125, 0.125, 1.0, 1.0 ]
+        u   = [   0.0,   0.0, 0.0, 0.0 ]
+        v   = [   0.0,   0.0, 0.0, 0.0 ]
+        p   = [   0.1,  0.1,  1.0, 1.0 ] 
 
-    # if cfg.case ==4:
-    #     # Rotated 1D Sod Shock Tube
-    #     rho = [ 0.125, 0.125, 1.0, 1.0 ]
-    #     u   = [   0.0,   0.0, 0.0, 0.0 ]
-    #     v   = [   0.0,   0.0, 0.0, 0.0 ]
-    #     p   = [   0.1,  0.1,  1.0, 1.0 ] 
+    if cfg.case == 18:
+        # Reverse 1D Sod Shock Tube
+        rho = [ 1.0, 0.125, 0.125, 1.0 ]
+        u   = [ 0.0,   0.0,   0.0, 0.0 ]
+        v   = [ 0.0,   0.0,   0.0, 0.0 ]
+        p   = [ 1.0,   0.1,  0.1,  1.0 ] 
 
-    # if cfg.case == 5:
-    #     # Reverse 1D Sod Shock Tube
-    #     rho = [ 1.0, 0.125, 0.125, 1.0 ]
-    #     u   = [ 0.0,   0.0,   0.0, 0.0 ]
-    #     v   = [ 0.0,   0.0,   0.0, 0.0 ]
-    #     p   = [ 1.0,   0.1,  0.1,  1.0 ] 
-
-    # if cfg.case == 6:
-    #     # Rotated Reverse 1D Sod Shock Tube
-    #     rho = [ 1.0, 1.0, 0.125, 0.125 ]
-    #     u   = [ 0.0, 0.0,   0.0,   0.0 ]
-    #     v   = [ 0.0, 0.0,   0.0,   0.0 ]
-    #     p   = [ 1.0, 1.0,   0.1,   0.1 ] 
-
-    # if cfg.case == 7:
-    #     # Reverse Carsten W. Schulz-Rinne 2D Riemann Problem
-    #     rho = [ 0.138, 0.5323, 1.5, 0.5323 ]
-    #     u   = [ 1.206,    0.0, 0.0,  1.206 ]
-    #     v   = [ 1.206,  1.206, 0.0,    0.0 ]
-    #     p   = [ 0.029,    0.3, 1.5,    0.3 ] 
-
-    # if cfg.case == 8:
-    #     # Custom Test Problem
-    #     rho = [ 3, 2, 1, 4 ]
-    #     u   = [ 0, 0, 0, 0 ]
-    #     v   = [ 0, 0, 0, 0 ]
-    #     p   = [ 1, 1, 1, 1 ]
+    if cfg.case == 19:
+        # Rotated Reverse 1D Sod Shock Tube
+        rho = [ 1.0, 1.0, 0.125, 0.125 ]
+        u   = [ 0.0, 0.0,   0.0,   0.0 ]
+        v   = [ 0.0, 0.0,   0.0,   0.0 ]
+        p   = [ 1.0, 1.0,   0.1,   0.1 ] 
        
-
     # Define the discontinuity location
     xdist = 0.5
     ydist = 0.5

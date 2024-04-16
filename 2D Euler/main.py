@@ -75,20 +75,29 @@ def main():
     # Initialize the Test Problem
     q_sys = ic.initial_condition()
  
-    # # Add Ghost Cells
+    # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys)
 
     q_sys_new = q_sys.copy()
 
-    # Plot Initial Condition
-    # eplt.plot_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],cfg.ti)
-
     t = cfg.ti
 
-    all_solns = []
-    all_t = []
-    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
-    all_t.append(t)
+    # Plot Initial Condition
+    # 2D Riemann Problems
+    if cfg.case in [0, 15]:
+        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    
+    # 1D Sod Shock Tube
+    if cfg.case == 16 or cfg.case == 18: 
+        eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
+    elif cfg.case == 17 or cfg.case == 19:
+        eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
+
+    # All Solutions for Movie Making
+    # all_solns = []
+    # all_t = []
+    # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
+    # all_t.append(t)
 
     while t < (cfg.tf):
         
@@ -114,29 +123,29 @@ def main():
         # Update Time Step
         t += dt
 
-        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
-        all_t.append(t)
+        # All Solutions for Movie Making
+        # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost])
+        # all_t.append(t)
 
     print(f"Finished after {time.time() - start:.5f} seconds")
 
-    print("let's make some movies!")
-
-    eplt.movie_maker(all_solns,all_t)
-    eplt.movie_maker_den(all_solns,all_t)
-
     # 2D Riemann Problems
-    # if cfg.case == 0 or cfg.case == 1 or cfg.case == 2 or cfg.case == 7 or cfg.case == 8:
-    eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
-    eplt.plot_den_contour(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    if cfg.case in [0, 15]:
+        eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+        eplt.plot_den_contour(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+        
+        # print("let's make some movies!")
+        # eplt.movie_maker(all_solns,all_t)
+        # eplt.movie_maker_den(all_solns,all_t)
     
     # 1D Sod Shock Tube
-    # if cfg.case == 3 or cfg.case == 5: 
-    #     eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
-    #     eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    if cfg.case == 16 or cfg.case == 18: 
+        eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost], t)
+        # eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
 
-    # elif cfg.case == 4 or cfg.case == 6:
-    #     eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
-    #     eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
+    elif cfg.case == 17 or cfg.case == 19:
+        eplt.plot_1D(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nx1//2], t)
+        # eplt.plot_prim(q_sys[:, cfg.nghost:-cfg.nghost, cfg.nghost:-cfg.nghost], t)
 
 
 if __name__ == "__main__":

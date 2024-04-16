@@ -9,8 +9,7 @@ import numpy as np
 
 # Number of Spatial Itterations
 # x-direction; y-direction
-nx1 = 512;      nx2 = 512
-# nx1 = 32;      nx2 = 32
+nx1 = 64;      nx2 = 64
 
 # Number of Ghost Cells
 nghost = 3
@@ -44,7 +43,7 @@ gamma = 1.4
 ####################################################################################################
 
 # 2D Riemann Problems
-case = 0  # Carsten W. Schulz-Rinne 
+# case = 0  # Carsten W. Schulz-Rinne 
 # case = 1  # Kurganov & Tadmor Configuration 1 
 # case = 2  # Kurganov & Tadmor Configuration 2
 # case = 3  # Kurganov & Tadmor Configuration 3
@@ -62,12 +61,10 @@ case = 0  # Carsten W. Schulz-Rinne
 # case = 15 # Kurganov & Tadmor Configuration 15
 
 # 1D Riemann Problems
-# case = 3 # 1D Sod Shock Tube
-# case = 4 # Rotated 1D Sod Shock Tube
-# case = 5 # Reverse 1D Sod Shock Tube
-# case = 6 # Rotated Reverse 1D Sod Shock Tube
-# case = 7 # Reverse Carsten W. Schulz-Rinne 2D Riemann Problem
-# case = 8 # Custom Test Problem
+# case = 16 # 1D Sod Shock Tube
+# case = 17 # Rotated 1D Sod Shock Tube
+# case = 18 # Reverse 1D Sod Shock Tube
+case = 19 # Rotated Reverse 1D Sod Shock Tube
 
 ####################################################################################################
 # Set Final Time
@@ -81,12 +78,10 @@ elif case == 4 or case == 7 or case == 8 or case == 12:
     tf = 0.25
 elif case == 5:
     tf = 0.23
-elif case == 10:
+elif case == 10 or case == 16 or case == 17 or case == 18 or case == 19:
     tf = 0.15
 elif case == 14:
     tf = 0.10
-# elif case == 3 or case == 4 or case == 5 or case == 6 or case == 8:
-    # tf = 0.15
 
 ####################################################################################################
 # Define Our Boundary Conditions
