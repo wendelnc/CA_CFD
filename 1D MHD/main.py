@@ -103,10 +103,8 @@ def main():
     while t < (cfg.tf):
         
         # Update Boundary Conditions 
-        # print(q_sys[4])
         q_sys = bc.boundary_conditions(q_sys)
-        # print(q_sys[4])
-        # fasa
+
         # Compute Time Step ∆t from CFL Condition
         dt, alpha = ts.time_step(q_sys,t)
 
