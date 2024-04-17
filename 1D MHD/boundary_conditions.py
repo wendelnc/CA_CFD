@@ -58,8 +58,12 @@ def boundary_conditions(q_sys):
 
     # Dirichlet Boundary Conditions (for Brio-Wu Shock Tube)
     elif bndc == 2:
-        q_l = np.array([1.0, -0.4, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
-        q_r = np.array([0.2, -0.4, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
+        if cfg.case == 0:
+            q_l = np.array([1.0, -0.4, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
+            q_r = np.array([0.2, -0.4, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
+        elif cfg.case == 1: 
+            q_l = np.array([  1.0, 0.0, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
+            q_r = np.array([0.125, 0.0, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
         for i in range(n_ghost):
             # Left States
             q_sys[0,i] = q_l[0]
@@ -79,5 +83,11 @@ def boundary_conditions(q_sys):
             q_sys[5,-1*n_ghost+i] = q_r[5]
             q_sys[6,-1*n_ghost+i] = q_r[6]
             q_sys[7,-1*n_ghost+i] = q_r[7]
+
+    # Outflow Boundary Conditions
+    elif bndc == 3:
+        for i in range(n_ghost):
+            q_sys[:,i] = q_sys[:,n_ghost]
+            q_sys[:,-1*n_ghost+i] = q_sys[:,-2*n_ghost]
 
     return q_sys

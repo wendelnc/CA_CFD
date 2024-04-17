@@ -36,21 +36,4 @@ def w_half(q1,q2):
     By  = 0.5 * (  By1 + By2 )
     Bz  = 0.5 * (  Bz1 + Bz2 )
 
-    # Eng = pre / (cfg.gamma - 1.) + 0.5 * den * (vex**2 + vey**2 + vez**2) + 0.5 * (Bx**2 + By**2 + Bz**2)
-
-    # bx = Bx / np.sqrt(4. * np.pi)
-    # by = By / np.sqrt(4. * np.pi)
-    # bz = Bz / np.sqrt(4. * np.pi)
-
-    # a = np.sqrt(cfg.gamma * pre / den)
-
-    # ca = np.sqrt((bx**2 + by**2 + bz**2) / den)
-
-    # cax = np.sqrt(bx**2 / den)
-
-    # cf = np.sqrt(0.5*((a**2 + ca**2) + np.sqrt((a**2 + ca**2)**2-(4 * a**2 * cax**2))))
-
-    # cs = np.sqrt(0.5*((a**2 + ca**2) - np.sqrt((a**2 + ca**2)**2-(4 * a**2 * cax**2))))
-
-
     return den, vex, vey, vez, pre, Bx, By, Bz

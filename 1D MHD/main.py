@@ -100,11 +100,17 @@ def main():
 
     t = cfg.ti
 
+    # All Solutions for Movie Making
+    all_solns = []
+    all_t = []
+    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+    all_t.append(t)
+
     while t < (cfg.tf):
         
         # Update Boundary Conditions 
         q_sys = bc.boundary_conditions(q_sys)
-
+        
         # Compute Time Step ∆t from CFL Condition
         dt, alpha = ts.time_step(q_sys,t)
 
@@ -122,10 +128,16 @@ def main():
         # Update Time Step
         t += dt
 
+        # All Solutions for Movie Making
+        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+        all_t.append(t)
+
     print(f"Finished after {time.time() - start:.5f} seconds")
 
     eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],t)
 
+    # print("let's make a movie!")
+    # eplt.movie_maker(all_solns,all_t)
 
 if __name__ == "__main__":
     main()

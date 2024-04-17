@@ -116,14 +116,14 @@ def set_rght_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     ru[7, 6] = -sqg2 * alphaf * a * t3
 
     # 8 - right eigenvector
-    ru[0, 7] = ru[0, 6]
+    ru[0, 7] =  ru[0, 6]
     ru[1, 7] = -ru[1, 6]
     ru[2, 7] = -ru[2, 6]
     ru[3, 7] = -ru[3, 6]
-    ru[4, 7] = ru[4, 6]
-    ru[5, 7] = ru[5, 6]
-    ru[6, 7] = ru[6, 6]
-    ru[7, 7] = ru[7, 6]
+    ru[4, 7] =  ru[4, 6]
+    ru[5, 7] =  ru[5, 6]
+    ru[6, 7] =  ru[6, 6]
+    ru[7, 7] =  ru[7, 6]
 
     for m in range(8):
         rr[0, m] = ru[0, m] / g1

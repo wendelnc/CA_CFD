@@ -25,7 +25,7 @@ def time_step(q_sys,t):
 
     # 3) Compute Alfven Wave Speed
     ca = np.sqrt((all_Bx**2 + all_By**2 + all_Bz**2) / all_rho)
-    cax = np.sqrt(all_Bx**2 / all_rho)
+    cax = np.abs(np.sqrt(all_Bx**2 / all_rho))
 
     # 4) Compute Fast Magnetosonic Wave Speed
     cf = np.sqrt(0.5 * ( a**2 + ca**2 + np.sqrt((a**2 + ca**2)**2 - (4 * a**2 * cax**2))))
@@ -34,14 +34,14 @@ def time_step(q_sys,t):
     cs = np.sqrt(0.5 * ( a**2 + ca**2 - np.sqrt((a**2 + ca**2)**2 - (4 * a**2 * cax**2))))
 
     # 3) Find Maximum Wave Speed
-    max_eigen_1 = np.max(np.abs(all_vex-cf))
+    max_eigen_1 = np.max(np.abs(all_vex-cf ))
     max_eigen_2 = np.max(np.abs(all_vex-cax))
-    max_eigen_3 = np.max(np.abs(all_vex-cs))
-    max_eigen_4 = np.max(np.abs(all_vex))
-    max_eigen_5 = np.max(np.abs(all_vex))
-    max_eigen_6 = np.max(np.abs(all_vex+cs))
+    max_eigen_3 = np.max(np.abs(all_vex-cs ))
+    max_eigen_4 = np.max(np.abs(all_vex    ))
+    max_eigen_5 = np.max(np.abs(all_vex    ))
+    max_eigen_6 = np.max(np.abs(all_vex+cs ))
     max_eigen_7 = np.max(np.abs(all_vex+cax))
-    max_eigen_8 = np.max(np.abs(all_vex+cf))
+    max_eigen_8 = np.max(np.abs(all_vex+cf ))
 
     alpha = np.array([max_eigen_1, max_eigen_2 , max_eigen_3, max_eigen_4, max_eigen_5, max_eigen_6, max_eigen_7, max_eigen_8])
 
