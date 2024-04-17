@@ -9,7 +9,7 @@ import numpy as np
 
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
-nx1 = 128;     nx2 = 32;    nx3 = 32
+nx1 = 256;     nx2 = 32;    nx3 = 32
 
 # Number of Ghost Cells
 nghost = 3
@@ -36,15 +36,16 @@ ti = 0.0; tf = 0.2
 CFL = 0.1
 
 # Heat Capacity Ratio
+gamma = 1.666666666666666666667
 # gamma = 5.0/3.0
-gamma = 2.0
+# gamma = 2.0
 
 ####################################################################################################
 # Define Our Test Problem
 ####################################################################################################
 
-# case = 0  # Brio & Wu Shock Tube (Qi Tang)
-case = 1  # Brio & Wu Shock Tube (Default)
+case = 0  # Brio & Wu Shock Tube (Qi Tang)
+# case = 1  # Brio & Wu Shock Tube (Default)
 
 ####################################################################################################
 # Define Our Boundary Conditions

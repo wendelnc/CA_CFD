@@ -12,7 +12,7 @@ import set_left_eigEntropy as lev # Compute Left Eigenvectors
 import weno as wn                 # Compute WENO Reconstruction
 
 # @njit
-def lf_flux(q_arr,alpha):
+def lf_flux(q_arr,alpha,nx,ny,nz):
 
                   # x_{i+1/2}   # x_{i-1/2}
                   #----------   #----------
@@ -24,20 +24,17 @@ def lf_flux(q_arr,alpha):
     q5 = q_arr[5] # cell i+3    # cell i+2
 
     # 1. Compute the physical flux at each grid point:
-    flux0 = gf.get_flux(q0) 
-    flux1 = gf.get_flux(q1) 
-    flux2 = gf.get_flux(q2) 
-    flux3 = gf.get_flux(q3) 
-    flux4 = gf.get_flux(q4) 
-    flux5 = gf.get_flux(q5) 
+    flux0 = gf.get_flux(q0,nx,ny,nz) 
+    flux1 = gf.get_flux(q1,nx,ny,nz) 
+    flux2 = gf.get_flux(q2,nx,ny,nz) 
+    flux3 = gf.get_flux(q3,nx,ny,nz) 
+    flux4 = gf.get_flux(q4,nx,ny,nz) 
+    flux5 = gf.get_flux(q5,nx,ny,nz) 
 
     # 2. At each x_{i+1,j}:
     # (a) Compute the average state w_{i+1/2} in the primitive variables:
     den, vex, vey, vez, pre, Bx, By, Bz = wh.w_half(q2,q3) 
-      
-    n1 = 1.0
-    n2 = 0.0
-    n3 = 0.0
+
     t1 = 0.0
 
     Bnm = np.sqrt(Bz**2 + By**2)
@@ -49,8 +46,8 @@ def lf_flux(q_arr,alpha):
         t3 = np.cos(np.pi / 4.0)
 
     # (b) Compute the right and left eigenvectors of the flux Jacobian matrix, ∂f/∂x, at x = x_{i+1/2,j}:
-    r = rev.set_rght_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, n1, n2, n3, t1, t2, t3)
-    l = lev.set_left_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, n1, n2, n3, t1, t2, t3)
+    r = rev.set_rght_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, nx, ny, nz, t1, t2, t3)
+    l = lev.set_left_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, nx, ny, nz, t1, t2, t3)
 
     # (c) Project the solution and physical flux into the right eigenvector space:
 

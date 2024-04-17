@@ -7,7 +7,7 @@ import configuration as cfg      # Input Parameters
 import cons2prim as c2p          # Convert Conserved to Primitive Variables
 
 @njit
-def get_flux(q_sys):
+def get_flux(q_sys, nx, ny, nz):
     '''
     Function Name:      get_flux
     Creator:            Carolyn Wendeln
@@ -26,14 +26,19 @@ def get_flux(q_sys):
     rho, vex, vey, vez, pre, Bx, By, Bz = c2p.cons2prim(q_sys)
     Eng = q_sys[4]
 
-    f1 = rho * vex
-    f2 = (rho * vex * vex) + pre + (0.5 * (Bx**2 + By**2 + Bz**2)) - (Bx * Bx)
-    f3 = (rho * vex * vey) - (Bx * By)
-    f4 = (rho * vex * vez) - (Bx * Bz)
-    f5 = (vex * (Eng + pre + (0.5 * (Bx**2 + By**2 + Bz**2)))) - (Bx * (Bx * vex + By * vey + Bz * vez))
-    f6 = 0.0
-    f7 = (vex * By) - (vey * Bx)
-    f8 = (vex * Bz) - (vez * Bx)
+    vn = vex*nx + vey*ny + vez*nz
+    Bn = Bx*nx  + By*ny  + Bz*nz
+
+    Bnm = Bx**2 + By**2 + Bz**2
+
+    f1 = (rho * vn)
+    f2 = (rho * vex * vn) + nx*(pre + 0.5*Bnm) - (Bx * Bn)
+    f3 = (rho * vey * vn) + ny*(pre + 0.5*Bnm) - (By * Bn)
+    f4 = (rho * vez * vn) + nz*(pre + 0.5*Bnm) - (Bz * Bn)
+    f5 = (vn * (Eng + pre + 0.5*Bnm)) - (Bn * (Bx * vex + By * vey + Bz * vez))
+    f6 = (vn * Bx) - (vex * Bn)
+    f7 = (vn * By) - (vey * Bn)
+    f8 = (vn * Bz) - (vez * Bn)
     
     flux = np.array([f1,f2,f3,f4,f5,f6,f7,f8])
     
