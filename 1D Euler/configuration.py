@@ -8,7 +8,7 @@ import numpy as np
 ####################################################################################################
 
 # Number of Spatial Itterations
-nx1 = 64
+nx1 = 128
 
 # Number of Ghost Cells
 nghost = 3
@@ -26,7 +26,7 @@ grid = np.linspace(x1min,x1max-dx,nx1)
 ti = 0.0;   tf = 0.15
 
 # Courant-Friedrichs-Lewy (CFL) condition
-CFL = 0.1
+CFL = 2.5
 
 # Heat Capacity Ratio
 gamma = 1.4

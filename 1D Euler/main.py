@@ -55,7 +55,7 @@ import w_half as wh              # Compute w_{i+1/2} (or w_{i-1/2})
 import eigenvectors as ev        # Compute Right and Left Eigenvectors
 import weno as wn                # Compute WENO Reconstruction
 import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
-import RHS as rhs                # Compute Right Hand Side
+import ssp_rk as rk              # Strong Stability Preserving Runge-Kutta (SSP-RK3 and SSP-RK4)
 
 def main():
 
@@ -66,8 +66,6 @@ def main():
  
     # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys,cfg.nx1,cfg.nghost)
-
-    q_sys_new = q_sys.copy()
 
     # Plot Initial Condition
     # eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
@@ -82,16 +80,8 @@ def main():
         # Compute Time Step ∆t from CFL Condition
         dt, alpha = ts.time_step(q_sys,t)
 
-        for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
-
-            # Compute Lax-Friedrichs Flux Vector Splitting
-            f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha)
-            f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha)
-        
-            # Update Solution
-            q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
-
-        q_sys = np.copy(q_sys_new)
+        # SSP-RK4 Time Integration Scheme
+        q_sys = rk.rk4(q_sys, alpha, dt)
 
         # Update Time Step
         t += dt
