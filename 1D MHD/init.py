@@ -34,7 +34,13 @@ def initial_condition():
         #             ([    ρ, u_x, u_y, u_z,   p,  B_x,  B_y, B_z])
         q_l = np.array([  1.0, 0.0, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
         q_r = np.array([0.125, 0.0, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
-
+    
+    if cfg.case == 2:
+        # Brio-Wu Shock Tube (Qi Tang)
+        #             ([  ρ, u_x, u_y, u_z,   p,  B_x,  B_y, B_z])
+        q_l = np.array([1.0, 0.4, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
+        q_r = np.array([0.2, 0.4, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
+    
     # define where the Riemann problem begins on our grid
     xdiscont = 0.0
 

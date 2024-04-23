@@ -42,7 +42,8 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     twosq = np.sqrt(2.0)
     um2 = 0.5 * (u1**2 + u2**2 + u3**2)
 
-    beta1 = np.sign(BNs, np.array([1.0]))
+    # beta1 = np.sign(BNs, np.array([1.0]))
+    beta1 = np.sign(BNs * 1.0)
 
     sqgam = np.sqrt(g1 / gamma)
 

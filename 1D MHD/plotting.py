@@ -35,6 +35,8 @@ def load_exact(case):
         file_path = os.path.join(folder_path, 'shock_tube.8')
     if case == 1: # Brio-Wu Shock Tube
         file_path = os.path.join(folder_path, 'brio_wu.8')
+    if case == 2:
+        file_path = os.path.join(folder_path, 'fort.8')
 
     df = pd.read_csv(file_path, sep="\s+", header=None)  
 

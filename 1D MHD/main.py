@@ -35,6 +35,7 @@ where the conserved variables q are
     | ρu_y |
 q = | ρu_z |
     | E    |
+    | B_x  |
     | B_y  |
     | B_z  |
 
@@ -43,6 +44,7 @@ q = | ρu_z |
     |        ρu_xu_y - B_xB_y          |
 f = |        ρu_xu_z - B_xB_z          |
     | u_x(E + p + 0.5*∥B∥^2) - B_x(u·B) |
+    |               0                  |
     |        u_xB_y - u_yB_x           |
     |        u_xB_z - u_zB_x           |
 
@@ -53,6 +55,7 @@ For convenience, we also introduce the primative variables w
     | u_y |
 w = | u_z |
     | p   |
+    | B_x |
     | B_y |
     | B_z |
 
@@ -81,7 +84,7 @@ import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2})
 import set_rght_eigEntropy as rev # Compute Right Eigenvectors
 import set_rght_eigEntropy as lev # Compute Left Eigenvectors
 import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
-# import RHS as rhs                # Compute Right Hand Side
+import ssp_rk as rk               # Strong Stability Preserving Runge-Kutta (SSP-RK3 and SSP-RK4)
 
 def main():
 
@@ -93,18 +96,16 @@ def main():
     # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys)
 
-    q_sys_new = q_sys.copy()
-
     # Plot Initial Condition
     # eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
 
     t = cfg.ti
 
     # All Solutions for Movie Making
-    all_solns = []
-    all_t = []
-    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
-    all_t.append(t)
+    # all_solns = []
+    # all_t = []
+    # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+    # all_t.append(t)
 
     while t < (cfg.tf):
         
@@ -114,23 +115,24 @@ def main():
         # Compute Time Step ∆t from CFL Condition
         dt, alpha = ts.time_step(q_sys,t)
 
-        for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
+        # SSP-RK4 Time Integration Scheme
+        q_sys = rk.rk4(q_sys, alpha, dt)
 
-            # Compute Lax-Friedrichs Flux Vector Splitting
-            f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
-            f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
-        
-            # Update Solution
-            q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
-
-        q_sys = np.copy(q_sys_new)
+        # # Forward Euler
+        # for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
+        #     # Compute Lax-Friedrichs Flux Vector Splitting
+        #     f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
+        #     f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
+        #     # Update Solution
+        #     q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
+        # q_sys = np.copy(q_sys_new)
 
         # Update Time Step
         t += dt
 
         # All Solutions for Movie Making
-        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
-        all_t.append(t)
+        # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+        # all_t.append(t)
 
     print(f"Finished after {time.time() - start:.5f} seconds")
 

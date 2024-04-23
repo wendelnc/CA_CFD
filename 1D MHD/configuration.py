@@ -9,7 +9,7 @@ import numpy as np
 
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
-nx1 = 256;     nx2 = 32;    nx3 = 32
+nx1 = 128;     nx2 = 32;    nx3 = 32
 
 # Number of Ghost Cells
 nghost = 3
@@ -33,7 +33,7 @@ zgrid = np.linspace(x3min, x3max, nx3)
 ti = 0.0; tf = 0.2
 
 # Courant-Friedrichs-Lewy (CFL) condition
-CFL = 0.1
+CFL = 3.0
 
 # Heat Capacity Ratio
 gamma = 1.666666666666666666667
@@ -46,6 +46,7 @@ gamma = 1.666666666666666666667
 
 case = 0  # Brio & Wu Shock Tube (Qi Tang)
 # case = 1  # Brio & Wu Shock Tube (Default)
+# case = 2
 
 ####################################################################################################
 # Define Our Boundary Conditions

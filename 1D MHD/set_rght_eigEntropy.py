@@ -30,7 +30,8 @@ def set_rght_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     d = a2 + (b1s ** 2 + b2s ** 2 + b3s ** 2)
     cf = np.sqrt(0.5 * abs(d + np.sqrt(d ** 2 - 4.0 * a2 * (bN) ** 2)))
     cs = np.sqrt(0.5 * abs(d - np.sqrt(d ** 2 - 4.0 * a2 * (bN) ** 2)))
-    beta1 = np.sign((b1s * n1 + b2s * n2 + b3s * n3), np.array([1.0]))
+    # beta1 = np.sign((b1s * n1 + b2s * n2 + b3s * n3), np.array([1.0]))
+    beta1 = np.sign(bN * 1.0)
 
     if np.abs(cf * cf - cs * cs) <= 1.0e-12:
         alphaf = np.sin(np.arctan(1.0) / 2.0)
@@ -74,14 +75,14 @@ def set_rght_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     ru[7, 2] = sq12 * sqpor * TxN3
 
     # 4 - right eigenvector Alfven Wave
-    ru[0, 3] = ru[0, 2]
+    ru[0, 3] =  ru[0, 2]
     ru[1, 3] = -ru[1, 2]
     ru[2, 3] = -ru[2, 2]
     ru[3, 3] = -ru[3, 2]
-    ru[4, 3] = ru[4, 2]
-    ru[5, 3] = ru[5, 2]
-    ru[6, 3] = ru[6, 2]
-    ru[7, 3] = ru[7, 2]
+    ru[4, 3] =  ru[4, 2]
+    ru[5, 3] =  ru[5, 2]
+    ru[6, 3] =  ru[6, 2]
+    ru[7, 3] =  ru[7, 2]
 
     # 5 - right eigenvector
     bst = b1s * t1 + b2s * t2 + b3s * t3
@@ -96,14 +97,14 @@ def set_rght_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     ru[7, 4] = sqg2 * alphas * a * t3
 
     # 6 - right eigenvector
-    ru[0, 5] = ru[0, 4]
+    ru[0, 5] =  ru[0, 4]
     ru[1, 5] = -ru[1, 4]
     ru[2, 5] = -ru[2, 4]
     ru[3, 5] = -ru[3, 4]
-    ru[4, 5] = ru[4, 4]
-    ru[5, 5] = ru[5, 4]
-    ru[6, 5] = ru[6, 4]
-    ru[7, 5] = ru[7, 4]
+    ru[4, 5] =  ru[4, 4]
+    ru[5, 5] =  ru[5, 4]
+    ru[6, 5] =  ru[6, 4]
+    ru[7, 5] =  ru[7, 4]
 
     # 7 - right eigenvector
     ru[0, 6] = sqg2 * alphas * rhosq
