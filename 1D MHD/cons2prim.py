@@ -21,8 +21,6 @@ def cons2prim(q_sys):
     Dependencies:       none
     '''
 
-
-
     rho = q_sys[0]
     vex = q_sys[1] / q_sys[0]
     vey = q_sys[2] / q_sys[0]

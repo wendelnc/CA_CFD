@@ -4,6 +4,7 @@ import numpy as np
 # User Defined Libraries
 import configuration as cfg # configuration file
 
+# Riemann Problems
 def initial_condition():
     '''
     Function Name:      initial_condition
@@ -69,3 +70,29 @@ def initial_condition():
 
     return q_sys
 
+# Shear Test
+def initial_condition_shear():
+
+    q_sys = np.zeros((8,cfg.nx1))
+
+    Apre = 20.0
+
+    den = 1.0
+    pre = 1.0 / cfg.gamma
+    vex = 50.0
+    vey = Apre * (np.sin(2 * np.pi * cfg.xgrid) + 0.15 * np.sin(2 * np.pi * cfg.xgrid))
+    vez = 0.0
+    Bx = 0.0
+    By = 0.0
+    Bz = 0.0
+
+    q_sys[0,:] = den
+    q_sys[1,:] = den * vex
+    q_sys[2,:] = den * vey
+    q_sys[3,:] = den * vez
+    q_sys[4,:] = pre / (cfg.gamma - 1) + 0.5 * den * (vex**2 + vey**2 + vez**2) + 0.5 * (Bx**2 + By**2 + Bz**2)
+    q_sys[5,:] = Bx
+    q_sys[6,:] = By
+    q_sys[7,:] = Bz
+    
+    return q_sys

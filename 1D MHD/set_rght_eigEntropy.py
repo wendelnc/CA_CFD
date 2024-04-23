@@ -8,6 +8,13 @@ import cons2prim as c2p          # Convert Conserved to Primitive Variables
 
 # @njit
 def set_rght_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
+    '''
+    See Section 1.5 (Scaling Theorem Example: Magnetohydrodynamic Equations) of:
+    "Numerical Methods for Gas dynamic Systems on Unstructured Meshes"
+    By Timothy J. Barth
+    In particular, Entropy Scaled Eigenvectors ofthe Modified MHD Equations
+    Equations (54) - (57)
+    '''
 
     rr = np.zeros((8, 8))
     ru = np.zeros((8, 8))

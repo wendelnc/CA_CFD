@@ -7,7 +7,10 @@ import configuration as cfg      # Input Parameters
 import lf_flux as lf             # Compute Lax-Friedrichs Flux Vector Splitting
 
 def mathcal_L(q_sys, alpha):
-
+    '''
+    Our approximation of the spatial derivative
+    '''
+    
     q_new = np.zeros_like(q_sys)  
 
     for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
@@ -18,7 +21,12 @@ def mathcal_L(q_sys, alpha):
     return -1*q_new
 
 def rk3(q_sys, alpha, dt):
-    
+    '''
+    Equation (2.18) from the following paper:
+    "Efficient Implementation of Essentially Non-Oscillatory Shock Capturing Schemes"
+    By C.-W. Shu and S. Osher
+    '''
+
     q1 = q_sys + (dt * mathcal_L(q_sys, alpha))
     q2 = ((3/4)*q_sys) + ((1/4)*q1) + ((1/4)*dt*mathcal_L(q1, alpha))
     q_new = ((1/3)*q_sys) + ((2/3)*q2) + ((2/3)*dt*mathcal_L(q2, alpha))
@@ -26,6 +34,11 @@ def rk3(q_sys, alpha, dt):
     return q_new
 
 def rk4(q_sys, alpha, dt):
+    '''
+    Pseudocode 3 from the following paper:
+    "HIGHLY EFFICIENT STRONG STABILITY-PRESERVING RUNGE-KUTTA METHODS WITH LOW-STORAGE IMPLEMENTATIONS" 
+    By David I. Ketcheson 
+    '''
 
     # Initialize q1 and q2
     q1 = q_sys.copy()

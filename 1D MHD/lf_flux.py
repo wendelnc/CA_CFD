@@ -13,6 +13,11 @@ import weno as wn                 # Compute WENO Reconstruction
 
 # @njit
 def lf_flux(q_arr,alpha,nx,ny,nz):
+    '''
+    Following Procedure 2.10 from the following paper:
+    "Essentially Non-Oscillatory and Weighted Essentially Non-Oscillatory Schemes for Hyperbolic Conservation Laws"
+    By Chi-Wang Shu
+    '''
 
                   # x_{i+1/2}   # x_{i-1/2}
                   #----------   #----------

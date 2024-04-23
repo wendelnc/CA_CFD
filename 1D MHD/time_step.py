@@ -36,7 +36,6 @@ def time_step(q_sys,t):
     cs = np.sqrt(0.5 * np.abs( a**2 + ca**2 - np.sqrt((a**2 + ca**2)**2 - (4 * a**2 * cax**2))))
 
     # 3) Find Maximum Wave Speed
-    # if ne_g = 1
     max_eigen_1 = max(em, np.max(np.abs(all_vex      )))
     max_eigen_2 = max(em, np.max(np.abs(all_vex      )))
     max_eigen_3 = max(em, np.max(np.abs(all_vex + cax)))
@@ -47,21 +46,7 @@ def time_step(q_sys,t):
     max_eigen_8 = max(em, np.max(np.abs(all_vex - cs )))
     max_speed   = max(em, max(max_eigen_5,max_eigen_6 ))
 
-    # if ne_g = 2
-    # max_eigen_1 = np.max(np.abs(all_vex-cf ))
-    # max_eigen_2 = np.max(np.abs(all_vex-cax))
-    # max_eigen_3 = np.max(np.abs(all_vex-cs ))
-    # max_eigen_4 = np.max(np.abs(all_vex    ))
-    # max_eigen_5 = np.max(np.abs(all_vex    ))
-    # max_eigen_6 = np.max(np.abs(all_vex+cs ))
-    # max_eigen_7 = np.max(np.abs(all_vex+cax))
-    # max_eigen_8 = np.max(np.abs(all_vex+cf ))
-    # max_speed = max(em, max_eigen_8)
-
     alpha = np.array([max_eigen_1, max_eigen_2 , max_eigen_3, max_eigen_4, max_eigen_5, max_eigen_6, max_eigen_7, max_eigen_8])
-
-    #else
-    # max_speed = np.max(alpha)
 
     # 4) Compute Time Step
     dt = cfg.CFL * cfg.dx / max_speed

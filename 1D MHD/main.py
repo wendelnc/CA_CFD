@@ -92,6 +92,7 @@ def main():
 
     # Initialize the Test Problem
     q_sys = ic.initial_condition()
+    # q_sys = ic.initial_condition_shear()
  
     # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys)
@@ -117,15 +118,6 @@ def main():
 
         # SSP-RK4 Time Integration Scheme
         q_sys = rk.rk4(q_sys, alpha, dt)
-
-        # # Forward Euler
-        # for i in range(cfg.nghost,cfg.nx1+cfg.nghost):
-        #     # Compute Lax-Friedrichs Flux Vector Splitting
-        #     f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
-        #     f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
-        #     # Update Solution
-        #     q_sys_new[:,i] = q_sys[:,i] - ((dt)/(cfg.dx))*(f_r - f_l)  
-        # q_sys = np.copy(q_sys_new)
 
         # Update Time Step
         t += dt

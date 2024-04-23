@@ -33,12 +33,10 @@ zgrid = np.linspace(x3min, x3max, nx3)
 ti = 0.0; tf = 0.2
 
 # Courant-Friedrichs-Lewy (CFL) condition
-CFL = 3.0
+CFL = 1.0
 
 # Heat Capacity Ratio
-gamma = 1.666666666666666666667
-# gamma = 5.0/3.0
-# gamma = 2.0
+gamma = 5.0/3.0
 
 ####################################################################################################
 # Define Our Test Problem
@@ -46,13 +44,12 @@ gamma = 1.666666666666666666667
 
 case = 0  # Brio & Wu Shock Tube (Qi Tang)
 # case = 1  # Brio & Wu Shock Tube (Default)
-# case = 2
 
 ####################################################################################################
 # Define Our Boundary Conditions
 ####################################################################################################
 
 # bndc = 0 # Periodic Boundary Conditions
-# bndc = 1 # Reflective Boundary Conditions
+bndc = 1 # Reflective Boundary Conditions
 # bndc = 2 # Dirichlet Boundary Conditions (for Brio-Wu Shock Tube)
-bndc = 3 # Outflow Boundary Conditions
+# bndc = 3 # Outflow Boundary Conditions

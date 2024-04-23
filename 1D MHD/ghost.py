@@ -21,8 +21,8 @@ def add_ghost_cells(q_sys):
 
                         e.g.,
                         Our nx1 sized array for q_sys:
-								                #   #   #   #   #   #   #
-						                  |---|---|---|---|---|---|---|
+                          #   #   #   #   #   #   #
+						            |---|---|---|---|---|---|---|
 
                      	Our nx1+2*(nghost) array for q_with_ghost
 
