@@ -94,18 +94,18 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     lu[2, 7] = TxN3 / nen31
 
     # 4 - left eigenvector
-    lu[3, 0] = lu[2, 0]
+    lu[3, 0] =  lu[2, 0]
     lu[3, 1] = -lu[2, 1]
     lu[3, 2] = -lu[2, 2]
     lu[3, 3] = -lu[2, 3]
-    lu[3, 4] = lu[2, 4]
-    lu[3, 5] = lu[2, 5]
-    lu[3, 6] = lu[2, 6]
-    lu[3, 7] = lu[2, 7]
+    lu[3, 4] =  lu[2, 4]
+    lu[3, 5] =  lu[2, 5]
+    lu[3, 6] =  lu[2, 6]
+    lu[3, 7] =  lu[2, 7]
 
     # 5 - left eigenvector
     Term51 = rho * cf * ((n2 * t1 * t2 + n3 * t1 * t3 - n1 * (t2**2 + t3**2)) * rhosq * cf**2 *
-                         alphaf - a * BN * alphas * (-n2**2 * t1 + n1 * n2 * t2 + n3 * t2 * n3 * TxN2))
+                         alphaf - a * BN * alphas * (-n2**2 * t1 + n1 * n2 * t2 + n3 * TxN2))
 
     Term52 = rho * cf * ((-t2 * (n1 * t1 + n3 * t3) + n2 * (t1**2 + t3**2)) * rhosq * cf**2 *
                          alphaf - a * BN * alphas * (-n1 * n2 * t1 + n1**2 * t2 + n3 * TxN1))
@@ -127,22 +127,22 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
 
     lu[4, 0] = 0.0
     lu[4, 1] = -Term51 / nen51
-    lu[4, 2] = Term52 / nen51
-    lu[4, 3] = Term53 / nen51
-    lu[4, 4] = Term54
-    lu[4, 5] = Term55 / nen52
-    lu[4, 6] = Term56 / nen52
-    lu[4, 7] = Term57 / nen52
+    lu[4, 2] =  Term52 / nen51
+    lu[4, 3] =  Term53 / nen51
+    lu[4, 4] =  Term54
+    lu[4, 5] =  Term55 / nen52
+    lu[4, 6] =  Term56 / nen52
+    lu[4, 7] =  Term57 / nen52
 
     # 6 - left eigenvector
-    lu[5, 0] = lu[4, 0]
+    lu[5, 0] =  lu[4, 0]
     lu[5, 1] = -lu[4, 1]
     lu[5, 2] = -lu[4, 2]
     lu[5, 3] = -lu[4, 3]
-    lu[5, 4] = lu[4, 4]
-    lu[5, 5] = lu[4, 5]
-    lu[5, 6] = lu[4, 6]
-    lu[5, 7] = lu[4, 7]
+    lu[5, 4] =  lu[4, 4]
+    lu[5, 5] =  lu[4, 5]
+    lu[5, 6] =  lu[4, 6]
+    lu[5, 7] =  lu[4, 7]
 
     # 7 - left eigenvector
     Term71 = rho * cf * (a * (n2**2 * t1 - n1 * n2 * t2 + n3 * (n3 * t1 - n1 * t3)) * rhosq *
@@ -160,7 +160,7 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
                          (n1 * t1 + n2 * t2) * t3 + (n1**2 + n2**2) * t3**2) +
                          B2 * (n3 * t1 - n1 * t3) * TxN3 + B1 * (-n3 * t2 + n2 * t3) * TxN3))
 
-    Term74 = alphas / (twosq * a**2 * gu1sq * rhosq * (alphaf**2 + alphas**2))
+    Term74 =  alphas / (twosq * a**2 * gu1sq * rhosq * (alphaf**2 + alphas**2))
 
     Term75 = -alphaf * (n2**2 * t1 - n1 * n2 * t2 + n3 * (n3 * t1 - n1 * t3))
 
@@ -168,8 +168,7 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
 
     Term77 = -alphaf * (-n1 * n3 * t1 + n1**2 * t3 + n2 * (-n3 * t2 + n2 * t3))
 
-    nen71 = twosq * beta1 * nen * gu1sq * (a * BN**2 * alphas**2 + rhosq * cf**2 * alphaf *
-                                           (a * rhosq * alphaf + BT * alphas))
+    nen71 = twosq * beta1 * nen * gu1sq * (a * BN**2 * alphas**2 + rhosq * cf**2 * alphaf * (a * rhosq * alphaf + BT * alphas))
 
     nen72 = nen52
 
@@ -183,27 +182,26 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     lu[6, 7] = Term77 / nen72
 
     # 8 - left eigenvector
-    lu[7, 0] = lu[6, 0]
+    lu[7, 0] =  lu[6, 0]
     lu[7, 1] = -lu[6, 1]
     lu[7, 2] = -lu[6, 2]
     lu[7, 3] = -lu[6, 3]
-    lu[7, 4] = lu[6, 4]
-    lu[7, 5] = lu[6, 5]
-    lu[7, 6] = lu[6, 6]
-    lu[7, 7] = lu[6, 7]
+    lu[7, 4] =  lu[6, 4]
+    lu[7, 5] =  lu[6, 5]
+    lu[7, 6] =  lu[6, 6]
+    lu[7, 7] =  lu[6, 7]
 
     # CONSERVATIVE E-VECTORS
     lq = np.zeros_like(lu)
 
     for m in range(8):
-        lq[m, 0] = lu[m, 0] * g1 - lu[m, 1] * u1 * g1 / rho - lu[m, 2] * u2 * g1 / rho - lu[m, 3] * u3 * g1 / rho + lu[m, 4] * g1**2 * (u1**2 + u2**2 + u3**2)**0.5
+        lq[m, 0] =  lu[m, 0] * g1 - lu[m, 1] * u1 * g1 / rho - lu[m, 2] * u2 * g1 / rho - lu[m, 3] * u3 * g1 / rho + lu[m, 4] * g1**2 * (u1**2 + u2**2 + u3**2) * 0.5
         lq[m, 1] = -lu[m, 4] * u1 * g1**2 + lu[m, 1] * g1 / rho
         lq[m, 2] = -lu[m, 4] * u2 * g1**2 + lu[m, 2] * g1 / rho
         lq[m, 3] = -lu[m, 4] * u3 * g1**2 + lu[m, 3] * g1 / rho
-        lq[m, 4] = lu[m, 4] * g1**2
-        lq[m, 5] = lu[m, 5] * g1 - B1 * lu[m, 4] * g1**2
-        lq[m, 6] = lu[m, 6] * g1 - B2 * lu[m, 4] * g1**2
-        lq[m, 7] = lu[m, 7] * g1 - B3 * lu[m, 4] * g1**2
-
+        lq[m, 4] =  lu[m, 4] * g1**2
+        lq[m, 5] =  lu[m, 5] * g1 - B1 * lu[m, 4] * g1**2
+        lq[m, 6] =  lu[m, 6] * g1 - B2 * lu[m, 4] * g1**2
+        lq[m, 7] =  lu[m, 7] * g1 - B3 * lu[m, 4] * g1**2
     # Return the updated 'lq' matrix
     return lq
