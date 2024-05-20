@@ -32,7 +32,7 @@ def add_ghost_cells(q_sys):
     Dependencies:       None
     '''
 
-    q_sys_with_ghost = np.zeros((8,cfg.nx1+(2*cfg.nghost)))
+    q_sys_with_ghost = np.zeros((8,(cfg.nx1+1)+(2*cfg.nghost)))
     q_sys_with_ghost[:,(cfg.nghost):-1*(cfg.nghost)] = q_sys[:]
 
     return q_sys_with_ghost

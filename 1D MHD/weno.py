@@ -86,7 +86,11 @@ def weno(vmm,vm,v,vp,vpp,umm,um,u,up,upp):
     # α = maxu |f′(u)|
     ################################################################################################
     
+    # WENO-JS
     epsilon = 1E-6
+    
+    # WENO-Z
+    # epsilon = 1E-40
 
     ################################################################################################
     # Choose the positive fluxes: v_i = f^{+}(u_i) = 0.5 * (f(u) + αu)
@@ -101,9 +105,16 @@ def weno(vmm,vm,v,vp,vpp,umm,um,u,up,upp):
     d_1n = 6.0/10.0
     d_2n = 3.0/10.0
 
+    # WENO-JS
     alpha_0n = d_0n / (epsilon + beta_0n)**2.    
     alpha_1n = d_1n / (epsilon + beta_1n)**2.    
     alpha_2n = d_2n / (epsilon + beta_2n)**2.
+
+    # WENO-Z    
+    # tau5n = np.abs(beta_0n-beta_2n)   
+    # alpha_0n = d_0n * (1 + (tau5n / (epsilon + beta_0n)))    
+    # alpha_1n = d_1n * (1 + (tau5n / (epsilon + beta_1n)))   
+    # alpha_2n = d_2n * (1 + (tau5n / (epsilon + beta_2n)))   
 
     alpha_sumn = alpha_0n + alpha_1n + alpha_2n
 
@@ -128,9 +139,16 @@ def weno(vmm,vm,v,vp,vpp,umm,um,u,up,upp):
     d_1p = 6.0/10.0
     d_2p = 1.0/10.0
 
+    # WENO-JS
     alpha_0p = d_0p / (epsilon + beta_0p)**2.    
     alpha_1p = d_1p / (epsilon + beta_1p)**2.    
     alpha_2p = d_2p / (epsilon + beta_2p)**2.
+
+    # WENO-Z    
+    # tau5p = np.abs(beta_0p-beta_2p)   
+    # alpha_0p = d_0p * (1 + (tau5p / (epsilon + beta_0p)))    
+    # alpha_1p = d_1p * (1 + (tau5p / (epsilon + beta_1p)))   
+    # alpha_2p = d_2p * (1 + (tau5p / (epsilon + beta_2p)))   
 
     alpha_sump = alpha_0p + alpha_1p + alpha_2p
 
@@ -141,7 +159,7 @@ def weno(vmm,vm,v,vp,vpp,umm,um,u,up,upp):
     wp  = (1.0/6.0)*( weight_0p*(-umm + 5*um +   2*u) \
                     + weight_1p*(2*um + 5*u  -    up) \
                     + weight_2p*(11*u - 7*up + 2*upp) )
-   
+  
     ################################################################################################
     # Numerical flux
     # f_{i+1/2} = f_{i+1/2}^{+} + f_{i+1/2}^{-}

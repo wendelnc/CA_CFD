@@ -25,9 +25,9 @@ dy = (x2max-x2min)/(nx2)
 dz = (x3max-x3min)/(nx3)
 
 # Spatial Domain Grid
-xgrid = np.linspace(x1min, x1max, nx1)
-ygrid = np.linspace(x2min, x2max, nx2)
-zgrid = np.linspace(x3min, x3max, nx3)
+xgrid = np.linspace(x1min, x1max, nx1+1)
+ygrid = np.linspace(x2min, x2max, nx2+1)
+zgrid = np.linspace(x3min, x3max, nx3+1)
 
 # Initial Time 
 ti = 0.0; tf = 0.2
@@ -37,6 +37,7 @@ CFL = 1.0
 
 # Heat Capacity Ratio
 gamma = 5.0/3.0
+# gamma = 2.0
 
 ####################################################################################################
 # Define Our Test Problem
@@ -44,6 +45,8 @@ gamma = 5.0/3.0
 
 case = 0  # Brio & Wu Shock Tube (Qi Tang)
 # case = 1  # Brio & Wu Shock Tube (Default)
+# case = 2  # Figure 2a
+# case = 3  # Reversed Brio & Wu Shock Tube (Qi Tang)
 
 ####################################################################################################
 # Define Our Boundary Conditions

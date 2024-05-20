@@ -35,7 +35,11 @@ def load_exact(case):
         file_path = os.path.join(folder_path, 'shock_tube.8')
     if case == 1: # Brio-Wu Shock Tube
         file_path = os.path.join(folder_path, 'brio_wu.8')
-        
+    if case == 2: # Figure 2a
+        file_path = os.path.join(folder_path, 'fig_2a.8')
+    if case == 3: # Reversed Brio-Wu Shock Tube (Qi Tang)
+        file_path = os.path.join(folder_path, 'reverse_shock_tube.8')
+
     df = pd.read_csv(file_path, sep="\s+", header=None)  
 
     den = df[0].values
@@ -91,8 +95,8 @@ def plot_solution(q_sys,t):
     plots[0][0].plot(exact_grid,exact_den,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
     plots[0][0].plot(cfg.xgrid,rho,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[0][0].set_ylabel('Density')
-    plots[0][0].set_xlim(-1, 1)
-    plots[0][0].set_yticks([0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1])
+    plots[0][0].set_xlim(-1.0, 1.0)
+    plots[0][0].set_ylim(0.0,1.1)
     plots[0][0].legend()
 
     # Bottom Left Plot
@@ -100,14 +104,16 @@ def plot_solution(q_sys,t):
     plots[1][0].plot(cfg.xgrid,pre,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[1][0].set_xlabel('x')
     plots[1][0].set_ylabel('Pressure')
-    plots[1][0].set_xlim(-1, 1)
+    plots[1][0].set_xlim(-1.0, 1.0)
+    plots[1][0].set_ylim(0.0,1.1)
     plots[1][0].legend()
 
     # Top Middle Plot
     plots[0][1].plot(exact_grid,exact_vex,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
     plots[0][1].plot(cfg.xgrid,vex,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[0][1].set_ylabel('X Velocity')
-    plots[0][1].set_xlim(-1, 1)
+    plots[0][1].set_xlim(-1.0, 1.0)
+    plots[0][1].set_ylim(-0.8, 0.4)
     plots[0][1].legend()
 
     # Bottom Middle Plot
@@ -115,14 +121,16 @@ def plot_solution(q_sys,t):
     plots[1][1].plot(cfg.xgrid,vey,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[1][1].set_xlabel('x')
     plots[1][1].set_ylabel('Y Velocity')
-    plots[1][1].set_xlim(-1, 1)
+    plots[1][1].set_xlim(-1.0, 1.0)
+    plots[1][1].set_ylim(-1.6, 0.1)
     plots[1][1].legend()
 
     # Top Right Plot
     plots[0][2].plot(exact_grid,exact_By,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
     plots[0][2].plot(cfg.xgrid,By,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[0][2].set_ylabel('Y Magnetic Field')
-    plots[0][2].set_xlim(-1, 1)
+    plots[0][2].set_xlim(-1.0, 1.0)
+    plots[0][2].set_ylim(-1.1, 1.1)
     plots[0][2].legend()
 
     # Bottom Right Plot
@@ -130,7 +138,8 @@ def plot_solution(q_sys,t):
     plots[1][2].plot(cfg.xgrid,E,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
     plots[1][2].set_xlabel('x')
     plots[1][2].set_ylabel('Total Energy')
-    plots[1][2].set_xlim(-1, 1)
+    plots[1][2].set_xlim(-1.0, 1.0)
+    plots[1][2].set_ylim(0.7,2.5)
     plots[1][2].legend()
 
     plt.show()

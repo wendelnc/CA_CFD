@@ -10,6 +10,8 @@ import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2}
 import set_rght_eigEntropy as rev # Compute Right Eigenvectors
 import set_left_eigEntropy as lev # Compute Left Eigenvectors
 import weno as wn                 # Compute WENO Reconstruction
+import weno_hj as wnhj            # Compute Hamilton–Jacobi WENO Reconstruction
+import weno5 as wn5               # Compute Standard WENO Reconstruction
 
 # @njit
 def lf_flux(q_arr,alpha,nx,ny,nz):
@@ -53,9 +55,8 @@ def lf_flux(q_arr,alpha,nx,ny,nz):
     # (b) Compute the right and left eigenvectors of the flux Jacobian matrix, ∂f/∂x, at x = x_{i+1/2,j}:
     r = rev.set_rght_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, nx, ny, nz, t1, t2, t3)
     l = lev.set_left_eigEntropy(den, vex, vey, vez, pre, Bx, By, Bz, nx, ny, nz, t1, t2, t3)
-
+ 
     # (c) Project the solution and physical flux into the right eigenvector space:
-
     vj0 = np.dot(l, q0)
     vj1 = np.dot(l, q1)
     vj2 = np.dot(l, q2)
@@ -80,9 +81,9 @@ def lf_flux(q_arr,alpha,nx,ny,nz):
     gp2 = 0.5 * (gj2 + 1.1 * alpha * vj2)
     gp3 = 0.5 * (gj3 + 1.1 * alpha * vj3)
     gp4 = 0.5 * (gj4 + 1.1 * alpha * vj4)
-    # gp5 = 0.5 * (gj5 + 1.1 * alpha * vj5)     # not needed for WENO
+    gp5 = 0.5 * (gj5 + 1.1 * alpha * vj5)     
 
-    # gm0 = 0.5 * (gj0 - 1.1 * alpha * vj0)     # not needed for WENO
+    gm0 = 0.5 * (gj0 - 1.1 * alpha * vj0)     
     gm1 = 0.5 * (gj1 - 1.1 * alpha * vj1)
     gm2 = 0.5 * (gj2 - 1.1 * alpha * vj2)
     gm3 = 0.5 * (gj3 - 1.1 * alpha * vj3)
@@ -92,7 +93,14 @@ def lf_flux(q_arr,alpha,nx,ny,nz):
     # (e) Perform a WENO reconstruction on each of the computed flux components gj± to obtain 
     # the corresponding component of the numerical flux
 
-    g_half = wn.weno(gp0,gp1,gp2,gp3,gp4,gm1,gm2,gm3,gm4,gm5)
+    # OLD Standard WENO
+    # g_half = wn.weno(gp0,gp1,gp2,gp3,gp4,gm1,gm2,gm3,gm4,gm5)
+
+    # NEW Standard WENO 
+    # These should give the same result, they just use different stencils
+    g_plus_half = wn5.weno5(gp0,gp1,gp2,gp3,gp4)
+    g_min_half  = wn5.weno5(gm5,gm4,gm3,gm2,gm1)
+    g_half = g_min_half + g_plus_half
 
     # (f) Project the numerical flux back to the conserved variables
 

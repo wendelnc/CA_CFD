@@ -77,6 +77,7 @@ import init as ic                 # Initialize Test Problem
 import plotting as eplt           # Plotting Solution
 import ghost as ght               # Add Ghost Cells
 import boundary_conditions as bc  # Update Boundary Conditions
+import eigenvalues as ev          # Compute Eigenvalues
 import time_step as ts            # Compute Time Step
 import cons2prim as c2p           # Convert Conserved to Primitive Variables
 import get_flux as gf             # Compute Flux
@@ -92,10 +93,10 @@ def main():
 
     # Initialize the Test Problem
     q_sys = ic.initial_condition()
-    # q_sys = ic.initial_condition_shear()
- 
+
     # Add Ghost Cells
     q_sys = ght.add_ghost_cells(q_sys)
+    q_new = q_sys.copy()
 
     # Plot Initial Condition
     # eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
@@ -114,11 +115,11 @@ def main():
         q_sys = bc.boundary_conditions(q_sys)
         
         # Compute Time Step ∆t from CFL Condition
-        dt, alpha = ts.time_step(q_sys,t)
+        dt = ts.time_step(q_sys,t)
 
         # SSP-RK4 Time Integration Scheme
-        q_sys = rk.rk4(q_sys, alpha, dt)
-
+        q_sys = rk.rk4(q_sys, dt)
+         
         # Update Time Step
         t += dt
 
@@ -126,9 +127,20 @@ def main():
         # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
         # all_t.append(t)
 
+
     print(f"Finished after {time.time() - start:.5f} seconds")
 
     eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],t)
+
+    # rho, vex, vey, vez, pre, Bx, By, Bz = c2p.cons2prim(q_sys[:, cfg.nghost:-cfg.nghost])
+    # print("den = np.array({})".format(rho.tolist()))
+    # print("vex = np.array({})".format(vex.tolist()))
+    # print("vey = np.array({})".format(vey.tolist()))
+    # print("vez = np.array({})".format(vez.tolist()))
+    # print("pre = np.array({})".format(pre.tolist()))
+    # print("Bx = np.array({})".format(Bx.tolist()))
+    # print("By = np.array({})".format(By.tolist()))
+    # print("Bz = np.array({})".format(Bz.tolist()))
 
     # print("let's make a movie!")
     # eplt.movie_maker(all_solns,all_t)

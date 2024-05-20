@@ -22,7 +22,7 @@ def initial_condition():
 
     '''
 
-    q_sys = np.zeros((8,cfg.nx1))
+    q_sys = np.zeros((8,cfg.nx1+1))
 
     if cfg.case == 0:
         # Brio-Wu Shock Tube (Qi Tang)
@@ -37,16 +37,22 @@ def initial_condition():
         q_r = np.array([0.125, 0.0, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
     
     if cfg.case == 2:
-        # Brio-Wu Shock Tube (Qi Tang)
-        #             ([  ρ, u_x, u_y, u_z,   p,  B_x,  B_y, B_z])
-        q_l = np.array([1.0, 0.4, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
-        q_r = np.array([0.2, 0.4, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
-    
+        # Figure 2a
+        #             ([   ρ,   u_x, u_y, u_z,    p, B_x, B_y, B_z])
+        q_l = np.array([ 1.08,  1.2, 0.01, 0.5, 0.95, 2 / np.sqrt(4 * np.pi), 3.6 / np.sqrt(4 * np.pi), 2 / np.sqrt(4 * np.pi)])
+        q_r = np.array([ 1.0, 0.0, 0.0, 0.0,  1.0, 2 / np.sqrt(4 * np.pi), 4 / np.sqrt(4 * np.pi), 2 / np.sqrt(4 * np.pi)])
+
+    if cfg.case == 3:
+        # Reversed Brio-Wu Shock Tube (Qi Tang)
+        #             ([   ρ,   u_x, u_y, u_z,    p, B_x, B_y, B_z])
+        q_l = np.array([0.2, -0.4, 0.0, 0.0, 0.1, 0.75, -1.0, 0.0])
+        q_r = np.array([1.0, -0.4, 0.0, 0.0, 1.0, 0.75,  1.0, 0.0])
+
     # define where the Riemann problem begins on our grid
     xdiscont = 0.0
 
-    left = (cfg.xgrid <= xdiscont) 
-    right = (cfg.xgrid > xdiscont)
+    left = (cfg.xgrid < xdiscont) 
+    right = (cfg.xgrid >= xdiscont)
 
     # Left States
     q_sys[0,left] = q_l[0]
@@ -94,5 +100,5 @@ def initial_condition_shear():
     q_sys[5,:] = Bx
     q_sys[6,:] = By
     q_sys[7,:] = Bz
-    
+
     return q_sys
