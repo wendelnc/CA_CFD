@@ -45,7 +45,7 @@ gamma = 5.0/3.0
 
 case = 0  # Brio & Wu Shock Tube (Qi Tang)
 # case = 1  # Brio & Wu Shock Tube (Default)
-# case = 2  # Figure 2a
+# case = 2  # Figure 2a 
 # case = 3  # Reversed Brio & Wu Shock Tube (Qi Tang)
 
 ####################################################################################################

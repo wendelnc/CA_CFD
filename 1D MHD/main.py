@@ -104,10 +104,10 @@ def main():
     t = cfg.ti
 
     # All Solutions for Movie Making
-    # all_solns = []
-    # all_t = []
-    # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
-    # all_t.append(t)
+    all_solns = []
+    all_t = []
+    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+    all_t.append(t)
 
     while t < (cfg.tf):
         
@@ -124,8 +124,8 @@ def main():
         t += dt
 
         # All Solutions for Movie Making
-        # all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
-        # all_t.append(t)
+        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+        all_t.append(t)
 
 
     print(f"Finished after {time.time() - start:.5f} seconds")
@@ -142,8 +142,8 @@ def main():
     # print("By = np.array({})".format(By.tolist()))
     # print("Bz = np.array({})".format(Bz.tolist()))
 
-    # print("let's make a movie!")
-    # eplt.movie_maker(all_solns,all_t)
+    print("let's make a movie!")
+    eplt.movie_maker(all_solns,all_t)
 
 if __name__ == "__main__":
     main()

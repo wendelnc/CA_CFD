@@ -21,8 +21,8 @@ def mathcal_L(q_sys):
     alpha = ev.eigenvalues(q_sys)
 
     for i in range(cfg.nghost,(cfg.nx1+1)+cfg.nghost):
-        f_l = qlf.qi_lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
-        f_r = qlf.qi_lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
+        f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
+        f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
         q_new[:,i] = (f_r - f_l) / cfg.dx  
 
     return -1*q_new
