@@ -23,6 +23,8 @@ def initial_condition():
 
     q_sys = np.zeros((8,cfg.nx2,cfg.nx1))
 
+    a_sys = np.zeros((3,cfg.nx2,cfg.nx1))
+
     # Orszag-Tang Vortex
     if cfg.case == 0:
 
@@ -57,8 +59,8 @@ def initial_condition():
         vey =   np.sin(cfg.X)
         vez = 0
 
-        Bx = - np.sin(cfg.Y) + 2
-        By =   np.sin(2 * cfg.X) + 2
+        Bx = - np.sin(cfg.Y) 
+        By =   np.sin(2 * cfg.X) 
         Bz = 0
 
         q_sys[0,:,:] = rho
@@ -69,6 +71,8 @@ def initial_condition():
         q_sys[5,:,:] = Bx
         q_sys[6,:,:] = By
         q_sys[7,:,:] = Bz
+
+        a_sys[2,:,:] = 0.5 * np.cos(2*cfg.X) + np.cos(cfg.Y)
 
     # Orszag-Tang Vortex (Princeton)
     if cfg.case == 2:
@@ -153,5 +157,5 @@ def initial_condition():
         q_sys[6, bottom_right] = b_y[3]
         q_sys[7, bottom_right] = b_z[3]
 
-    return q_sys
+    return q_sys, a_sys
 

@@ -9,7 +9,7 @@ import numpy as np
 
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
-nx1 = 64;     nx2 = 64;    nx3 = 32
+nx1 = 32;     nx2 = 32;    nx3 = 32
 
 # Number of Ghost Cells
 nghost = 3
@@ -38,7 +38,8 @@ zgrid = np.linspace(x3min,x3max-dz,nx3)
 X, Y = np.meshgrid(xgrid, ygrid)
 
 # Initial Time 
-ti = 0.0; tf = 0.2
+ti = 0.0#; tf = 0.2
+tf = 1.0
 
 # Courant-Friedrichs-Lewy (CFL) condition
 CFL = 0.5

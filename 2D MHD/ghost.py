@@ -4,7 +4,7 @@ import numpy as np
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
 
-def add_ghost_cells(q_sys):
+def add_ghost_cells(q_sys,a_sys):
     '''
     Function Name:      add_ghost_cells
     Creator:            Carolyn Wendeln
@@ -32,7 +32,11 @@ def add_ghost_cells(q_sys):
     Dependencies:       None
     '''
 
-    q_sys_with_ghost = np.zeros((8,(cfg.nx2)+(2*cfg.nghost),(cfg.nx1)+(2*cfg.nghost)))
+    q_sys_with_ghost = np.zeros((8,cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
     q_sys_with_ghost[:,(cfg.nghost):-1*(cfg.nghost),(cfg.nghost):-1*(cfg.nghost)] = q_sys[:]
 
-    return q_sys_with_ghost
+    a_sys_with_ghost = np.zeros((3,cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
+    a_sys_with_ghost[:,(cfg.nghost):-1*(cfg.nghost),(cfg.nghost):-1*(cfg.nghost)] = a_sys[:]
+
+
+    return q_sys_with_ghost, a_sys_with_ghost

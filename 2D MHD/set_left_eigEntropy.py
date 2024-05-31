@@ -27,6 +27,10 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
 
     BN = (B1 * n1 + B2 * n2 + B3 * n3)
 
+    if np.abs(BN) <= 1.0e-12:
+        BN = 1.0e-12
+        BNs = 1.0e-12
+
     d = a2 + (b1s**2 + b2s**2 + b3s**2)
     cf = np.sqrt(0.5 * np.abs(d + np.sqrt(d**2 - 4.0 * a2 * (BNs)**2)))
     cs = np.sqrt(0.5 * np.abs(d - np.sqrt(d**2 - 4.0 * a2 * (BNs)**2)))
@@ -171,6 +175,21 @@ def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
     nen71 = twosq * beta1 * nen * gu1sq * (a * BN**2 * alphas**2 + rhosq * cf**2 * alphaf * (a * rhosq * alphaf + BT * alphas))
 
     nen72 = nen52
+
+    # print('nen71 = ',nen71)
+    # print('twosq = ',twosq)
+    # print('beta1 = ',beta1)
+    # print('nen = ',nen)
+    # print('gu1sq = ',gu1sq)
+    # print('a = ',a)
+    # print('BN = ',BN)
+    # print('alphas = ',alphas)
+    # print('rhosq = ',rhosq)
+    # print('cf = ',cf)
+    # print('alphaf = ',alphaf)
+    # print('BT = ',BT)
+
+    # asdfa
 
     lu[6, 0] = 0.0
     lu[6, 1] = Term71 / nen71

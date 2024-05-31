@@ -40,7 +40,7 @@ def plot_all_prim(q_sys,t):
         cbar.set_label(' ')
         return cbar
 
-    fig.suptitle('Solution at t = %.3f' % t)
+    fig.suptitle('Primative Solution at t = %.3f' % t)
 
     im1 = plots[0][0].imshow(rho, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
     plots[0][0].set_ylabel('y')
@@ -124,7 +124,7 @@ def plot_all_cons(q_sys,t):
         cbar.set_label(' ')
         return cbar
 
-    fig.suptitle('Solution at t = %.3f' % t)
+    fig.suptitle('Conserved Solution at t = %.3f' % t)
 
     im1 = plots[0][0].imshow(q_sys[0], cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
     plots[0][0].set_ylabel('y')
@@ -182,6 +182,56 @@ def plot_all_cons(q_sys,t):
 
     plt.show()
 
+def plot_mag_pot(a_sys,t):
+    '''
+    Function Name:      plot_soln
+    Creator:            Carolyn Wendeln
+    Date Created:       02-15-2023
+    Date Last Modified: 04-22-2024
+
+    Definition:         plot_soln plots the solution for the MHD Equaitons
+
+    Inputs:             q_sys: conserved variables
+                        t: current time step
+
+    Outputs:            image of different variables
+
+    Dependencies:       none
+    '''
+
+    fig, plots = plt.subplots(1, 3, gridspec_kw={'wspace': 0.25}, figsize=(10, 5))
+
+    def add_colorbar(im, ax):
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+        cbar = fig.colorbar(im, cax=cax)
+        cbar.set_label(' ')
+        return cbar
+
+    fig.suptitle('Magnetic Potential Solution at t = %.3f' % t)
+
+    im1 = plots[0].imshow(a_sys[0], cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[0].set_ylabel('y')
+    plots[0].set_title('A_x')
+    cbar1 = add_colorbar(im1, plots[0])
+    cbar1.set_label(' ')
+
+    im2 = plots[1].imshow(a_sys[1], cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[1].set_yticklabels([])
+    plots[1].set_title('A_y')
+    cbar2 = add_colorbar(im2, plots[1])
+    cbar2.set_label(' ')
+
+    im3 = plots[2].imshow(a_sys[2], cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
+    plots[2].set_yticklabels([])
+    plots[2].set_title('A_z')
+    cbar3 = add_colorbar(im3, plots[2])   
+    cbar3.set_label(' ')
+
+    fig.subplots_adjust(left=0.05, right=0.95, top=0.925, bottom=0.075)
+
+    plt.show()
+
 def movie_maker_all_prim(all_solns,all_t):
     '''
     Function Name:      movie_maker
@@ -223,7 +273,7 @@ def movie_maker_all_prim(all_solns,all_t):
 
     rho, u, v, w, p, Bx, By, Bz = c2p.cons2prim(q_sys)
    
-    fig.suptitle('Solution at t = %.3f' % all_t[0])
+    fig.suptitle('Primative Solution at t = %.3f' % all_t[0])
 
     im1 = plots[0][0].imshow(rho, cmap='viridis', extent=[0, 1, 0, 1],origin='lower')
     plots[0][0].set_ylabel('y')
@@ -286,7 +336,7 @@ def movie_maker_all_prim(all_solns,all_t):
 
         rho, u, v, w, p, Bx, By, Bz = c2p.cons2prim(q_sys)
    
-        fig.suptitle('Solution at t = %.3f' % all_t[i])
+        fig.suptitle('Primative Solution at t = %.3f' % all_t[i])
 
         im1.set_array(rho)
         im1.set_clim(vmin=rho.min(), vmax=rho.max())
