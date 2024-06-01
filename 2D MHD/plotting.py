@@ -377,6 +377,77 @@ def movie_maker_all_prim(all_solns,all_t):
     
     ani.save(file_path,writer='ffmpeg', dpi=500)
 
+def movie_maker_div(all_div,all_t):
+    '''
+    Function Name:      movie_maker
+    Creator:            Carolyn Wendeln
+    Date Created:       02-15-2023
+    Date Last Modified: 04-24-2023
+
+    Definition:         movie_maker plots the primative variables for the Euler Equaitons
+
+    Inputs:             all_solns: list of the solution at every time step
+                        all_t: list of all the time steps
+
+    Outputs:            movie labeled movie_title
+
+    Dependencies:       none
+    '''
+
+    # Get the current date and time
+    current_datetime = datetime.datetime.now()
+
+    # Convert the datetime object to a string
+    movie_title = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    movie_title = movie_title + ".mp4"
+
+    # Create a figure and axis for plotting
+    fig, ax = plt.subplots(figsize=(8, 8))  # Adjust the size as needed
+
+    def add_colorbar(im, ax):
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+        cbar = fig.colorbar(im, cax=cax)
+        cbar.set_label(' ')
+        return cbar
+
+    n_steps = len(all_t)
+
+    div = all_div[0]
+   
+    fig.suptitle(r'$\nabla \cdot \mathbf{B}$ at time $t = %.1f$' % all_t[0])
+
+    im1 = ax.imshow(div, cmap='viridis', extent=[0, 1, 0, 1], origin='lower')
+    ax.set_ylabel('y')
+    ax.set_xlabel('x')
+    # ax.set_title('Div B')
+    cbar1 = add_colorbar(im1, ax)
+    cbar1.set_label(' ')
+ 
+    def animate(i):
+        ''' function to update the plot for each frame  '''
+
+        div = all_div[i]
+   
+        fig.suptitle(r'$\nabla \cdot \mathbf{B}$ at time $t = %.1f$' % all_t[i])
+
+        im1.set_array(div)
+        im1.set_clim(vmin=div.min(), vmax=div.max())
+
+    # Create the animation using matplotlib's FuncAnimation
+    ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=100)
+
+    folder_path = os.path.join(os.getcwd(), "animations")
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    file_path = os.path.join(folder_path, movie_title)
+
+    print("Saving the Div B Plot...")
+    # Save the animation as a video file
+    
+    ani.save(file_path,writer='ffmpeg', dpi=500)
+
 def movie_maker_all_cons(all_solns,all_t):
     '''
     Function Name:      movie_maker

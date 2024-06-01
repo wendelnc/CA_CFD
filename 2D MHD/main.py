@@ -106,9 +106,11 @@ def main():
     # Add Ghost Cells
     q_sys, a_sys = ght.add_ghost_cells(q_sys, a_sys)
 
-    q_sys_star = q_sys.copy()
+    # q_sys_star = q_sys.copy()
     q_sys_new = q_sys.copy()
     a_sys_new = a_sys.copy()
+    div = np.zeros((cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
+    div_new = div.copy()
 
     # Plot Initial Condition
     # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],cfg.ti)
@@ -121,8 +123,11 @@ def main():
     # All Solutions for Movie Making
     all_solns = []
     all_t = []
-    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+    all_div = []
+
+    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
     all_t.append(t)
+    all_div.append(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
 
     while t < (cfg.tf):
 
@@ -131,15 +136,17 @@ def main():
         a_sys = bc.boundary_conditions(a_sys)
 
         # Check ∇·B = 0
-        # div = np.zeros((cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
+        # div2 = np.zeros((cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
         # for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
         #     for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):
         #         dbx = (1/(12.0*cfg.dx))*(q_sys[5,j,i-2] - 8.0*q_sys[5,j,i-1] + 8.0*q_sys[5,j,i+1] - q_sys[5,j,i+2])
         #         dby = (1/(12.0*cfg.dy))*(q_sys[6,j-2,i] - 8.0*q_sys[6,j-1,i] + 8.0*q_sys[6,j+1,i] - q_sys[6,j+2,i])
-        #         div[j,i] = dbx + dby
-        # plt.imshow(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+        #         div2[j,i] = dbx + dby
+        # plt.imshow(div2[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+        # plt.title(r'$\nabla \cdot \mathbf{B}$ at time $t = %.1f$' % t)
         # plt.colorbar()
         # plt.show()
+        # asdfs
 
         # Compute Time Step ∆t from CFL Condition
         dt, alphax, alphay = ts.time_step(q_sys,t)
@@ -157,6 +164,10 @@ def main():
         #   where Q^{*}_{MHD} = (ρ^{n+1}, ρ\textbf{u}^{n+1}, E^{*}, B^{*})
         for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
             for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):
+
+                dbx = (1/(12.0*cfg.dx))*(q_sys[5,j,i-2] - 8.0*q_sys[5,j,i-1] + 8.0*q_sys[5,j,i+1] - q_sys[5,j,i+2])
+                dby = (1/(12.0*cfg.dy))*(q_sys[6,j-2,i] - 8.0*q_sys[6,j-1,i] + 8.0*q_sys[6,j+1,i] - q_sys[6,j+2,i])
+                div_new[j,i] = dbx + dby
                 
                 f_l = lf.lf_flux(np.array([q_sys[:,j,i-3],q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2]]),alphax,1,0,0)
                 f_r = lf.lf_flux(np.array([q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2],q_sys[:,j,i+3]]),alphax,1,0,0)
@@ -187,6 +198,7 @@ def main():
 
         q_sys = np.copy(q_sys_new)
         a_sys = np.copy(a_sys_new)
+        div = np.copy(div_new)
 
         # 3. Set the total energy density E^{n+1} via Option 1
         #    where E^{n+1} = E^{*}
@@ -199,23 +211,25 @@ def main():
         # eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
         
         # All Solutions for Movie Making
-        if t != cfg.tf:
-            all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
-            all_t.append(t)
+        # if t != cfg.tf:
+        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+        all_t.append(t)
+        all_div.append(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
 
 
     print(f"Finished after {time.time() - start:.5f} seconds")
     
-    eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
+    # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
     # eplt.plot_all_cons(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-    eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
+    # eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
         
     # eplt.plot_soln(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
     # eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost],cfg.ti)
 
     # print("let's make some movies!")
+    eplt.movie_maker_div(all_div,all_t)
     eplt.movie_maker_all_prim(all_solns,all_t)
-    # eplt.movie_maker_all_cons(all_solns,all_t)
+    eplt.movie_maker_all_cons(all_solns,all_t)
 
 if __name__ == "__main__":
     main()
