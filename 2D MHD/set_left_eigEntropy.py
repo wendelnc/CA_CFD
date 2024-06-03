@@ -6,7 +6,7 @@ from numba import njit
 import configuration as cfg      # Input Parameters
 import cons2prim as c2p          # Convert Conserved to Primitive Variables
 
-# @njit
+@njit
 def set_left_eigEntropy(rho, u1, u2, u3, p, B1, B2, B3, n1, n2, n3, t1, t2, t3):
 
     lu = np.zeros((8, 8))

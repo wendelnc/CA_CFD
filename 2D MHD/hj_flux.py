@@ -1,7 +1,9 @@
 # Standard Python Libraries
+from numba import njit
 
 # User Defined Libraries
 
+@njit
 def weno_hj(a,b,c,d):
 
     epsilon = 1E-6
@@ -21,6 +23,7 @@ def weno_hj(a,b,c,d):
 
     return phi
 
+@njit
 def hj_flux(q0,q1,q2,q3,q4,q5,q6,dx):
     '''
             |           |    q1     |           |    q3     |           |    q5     |           |
@@ -58,6 +61,5 @@ def hj_flux(q0,q1,q2,q3,q4,q5,q6,dx):
     
     return u_x_plus, u_x_minus
 
-#def hj_flux(q_sys,a_sys,t):
 
     

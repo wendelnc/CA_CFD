@@ -7,6 +7,8 @@ from time import time, sleep
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from numba import njit
+
 
 # User Defined Libraries
 import configuration as cfg       # Input Parameters

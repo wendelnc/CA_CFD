@@ -15,7 +15,7 @@ def time_step(q_sys,t):
     alpha = ev.eigenvalues(q_sys)
     
     # 2) Find Maximum Wave Speed
-    max_speed   = max(em, max(alpha[0],alpha[5]))
+    max_speed   = max(em, max(alpha[0],alpha[5])) # Should this be max(max_eigen_5,max_eigen_6) (aka max(alpha[4],alpha[5]) )?
 
     # 3) Compute Time Step
     dt = cfg.CFL * cfg.dx / max_speed

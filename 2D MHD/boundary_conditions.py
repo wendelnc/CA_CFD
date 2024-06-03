@@ -1,5 +1,5 @@
 # Standard Python Libraries
-# from numba import njit
+from numba import njit
 
 # User Defined Libraries
 import configuration as cfg      # Input Parameters
