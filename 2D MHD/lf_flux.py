@@ -100,7 +100,6 @@ def lf_flux(q_arr,alpha,nx,ny,nz):
     # (e) Perform a WENO reconstruction on each of the computed flux components gj± to obtain 
     # the corresponding component of the numerical flux
 
-    # g_half = wn.weno(gp0,gp1,gp2,gp3,gp4,gm1,gm2,gm3,gm4,gm5) 
     g_half = wn5.weno5(gp0,gp1,gp2,gp3,gp4) + wn5.weno5(gm5,gm4,gm3,gm2,gm1)
 
     # (f) Project the numerical flux back to the conserved variables

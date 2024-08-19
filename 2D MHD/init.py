@@ -20,37 +20,62 @@ def initial_condition():
     Dependencies:       none
 
     '''
+    
+    q_sys = np.zeros((8,cfg.nx1+(2*cfg.nghost),cfg.nx2+(2*cfg.nghost)))
 
-    q_sys = np.zeros((8,cfg.nx2,cfg.nx1))
+    a_sys = np.zeros((3,cfg.nx1+(2*cfg.nghost),cfg.nx2+(2*cfg.nghost)))
 
-    a_sys = np.zeros((3,cfg.nx2,cfg.nx1))
-
-    # Orszag-Tang Vortex
+    # Smooth Alfven Waves
     if cfg.case == 0:
+        '''
+        
+        3.5.1.1 2D Problem from Qi Tang's PhD Thesis
 
-        rho = (cfg.gamma)**2 / (4 * np.pi) 
-        pre =  cfg.gamma     / (4 * np.pi)
+        HIGH-ORDER UNSTAGGERED CONSTRAINED TRANSPORT METHOD FOR MAGNETOHYDRODYNAMIC EQUATIONS
+        
+        '''     
 
-        vex = - np.sin(2 * np.pi * cfg.Y) 
-        vey =   np.sin(2 * np.pi * cfg.X)
-        vez = 0
 
-        B0 = 1 / np.sqrt(4 * np.pi)
-        Bx = - B0 * np.sin(2 * np.pi * cfg.Y)
-        By =   B0 * np.sin(4 * np.pi * cfg.X)
-        Bz = 0
+        theta = 0.463647609000806
+
+        ctheta = np.cos(theta)
+        stheta = np.sin(theta)
+        ttheta = np.tan(theta)
+
+        rho = 1.0 
+        pre =  0.1
+        
+        B1 = 1.0
+
+        xtmp = cfg.X*ctheta + cfg.Y*stheta
+
+        vex = 0.0
+        vey = 0.1 * np.sin(2*np.pi*xtmp)
+        vez = 0.1 * np.cos(2*np.pi*xtmp)
+
+        Bx = 1.0
+        By =  vey
+        Bz = vez
 
         q_sys[0,:,:] = rho
-        q_sys[1,:,:] = rho * vex
-        q_sys[2,:,:] = rho * vey
-        q_sys[3,:,:] = rho * vez
+        q_sys[1,:,:] = rho*(vex*ctheta - vey*stheta)
+        q_sys[2,:,:] = rho*(vex*stheta + vey*ctheta)
+        q_sys[3,:,:] = rho*vez
         q_sys[4,:,:] = (pre / ((cfg.gamma-1.))) + 0.5 * rho * (vex**2 + vey**2 + vez**2) + 0.5 * (Bx**2 + By**2 + Bz**2)
-        q_sys[5,:,:] = Bx
-        q_sys[6,:,:] = By
+        q_sys[5,:,:] = Bx*ctheta - By*stheta
+        q_sys[6,:,:] = Bx*stheta + By*ctheta
         q_sys[7,:,:] = Bz
+
+        a_sys[2,:,:] = (0.1 / (2*np.pi)) * np.cos(2*np.pi*xtmp) + B1*cfg.Y*ctheta - B1*cfg.X*stheta
 
     # Orszag-Tang Vortex (Qi)
     if cfg.case == 1:
+        '''
+        3.5.3 2D Orszag-Tang Vortex from Qi Tang's PhD Thesis
+
+        HIGH-ORDER UNSTAGGERED CONSTRAINED TRANSPORT METHOD FOR MAGNETOHYDRODYNAMIC EQUATIONS
+        
+        '''
 
         rho = (cfg.gamma)**2 
         pre =  cfg.gamma     

@@ -26,47 +26,47 @@ E is the total energy = (p / (γ-1)) + 0.5ρ*∥u∥^2 + 0.5*∥B∥^2
 
 Written slightly different we have
 
-∂q/∂t + ∂F/∂x + ∂G/∂y + = 0
+∂q/∂t + ∂F(q)/∂x + ∂G(q)/∂y = 0
 
 where the conserved variables q are
 
-    | ρ    |
-    | ρu_x |
-    | ρu_y |
-q = | ρu_z |
-    | E    |
-    | B_x  |
-    | B_y  |
-    | B_z  |
+       | ρ    |
+       | ρu_x |
+       | ρu_y |
+q =    | ρu_z |
+       | E    |
+       | B_x  |
+       | B_y  |
+       | B_z  |
 
-    |              ρu_x                |
-    | ρu_xu_x + p + 0.5*∥B∥^2 - B_xB_x  |
-    |        ρu_xu_y - B_xB_y          |
-F = |        ρu_xu_z - B_xB_z          |
-    | u_x(E + p + 0.5*∥B∥^2) - B_x(u·B) |
-    |               0                  |
-    |        u_xB_y - u_yB_x           |
-    |        u_xB_z - u_zB_x           |
+       |              ρu_x                |
+       | ρu_xu_x + p + 0.5*∥B∥^2 - B_xB_x  |
+       |        ρu_xu_y - B_xB_y          |
+F(q) = |        ρu_xu_z - B_xB_z          |
+       | u_x(E + p + 0.5*∥B∥^2) - B_x(u·B) |
+       |               0                  |
+       |        u_xB_y - u_yB_x           |
+       |        u_xB_z - u_zB_x           |
 
-    |              ρu_y                |
-    |        ρu_yu_x - B_yB_x          |
-    | ρu_yu_y + p + 0.5*∥B∥^2 - B_yB_y  |
-G = |        ρu_yu_z - B_yB_z          |
-    | u_y(E + p + 0.5*∥B∥^2) - B_y(u·B) |
-    |        u_yB_x - u_xB_y           |
-    |               0                  |
-    |        u_yB_z - u_zB_y           |
+       |              ρu_y                |
+       |        ρu_yu_x - B_yB_x          |
+       | ρu_yu_y + p + 0.5*∥B∥^2 - B_yB_y  |
+G(q) = |        ρu_yu_z - B_yB_z          |
+       | u_y(E + p + 0.5*∥B∥^2) - B_y(u·B) |
+       |        u_yB_x - u_xB_y           |
+       |               0                  |
+       |        u_yB_z - u_zB_y           |
 
 For convenience, we also introduce the primative variables w
 
-    | ρ   |
-    | u_x |
-    | u_y |
-w = | u_z |
-    | p   |
-    | B_x |
-    | B_y |
-    | B_z |
+       | ρ   |
+       | u_x |
+       | u_y |
+w =    | u_z |
+       | p   |
+       | B_x |
+       | B_y |
+       | B_z |
 
 I am solving this system of equations using a Finite Difference Lax-Friedrichs Flux Vector Splitting method
 Following Procedure 2.10 from the following paper:
@@ -74,6 +74,47 @@ Following Procedure 2.10 from the following paper:
 By: Chi-Wang Shu
 https://www3.nd.edu/~zxu2/acms60790S13/Shu-WENO-notes.pdf
 
+To satisfy the ∇·B = 0 constraint, I am using an unstaggered constraint transport method from the following paper:
+"An Unstaggered Constrained Transport Method for the 3D Ideal Magnetohydrodynamic Equations"
+By: Christiane Helzel, James A. Rossmanith, and Bertram Taetz
+https://arxiv.org/abs/1007.2606
+
+To solve the magnetic potential, I am using a Hamilton-Jacobi Lax-Friedrichs Flux Vector Splitting method
+seen in the following paper:
+"Weighted ENO Schemes for Hamilton-Jacobi Equations"
+By: Guang-Shan Jiang and Danping Peng
+https://epubs.siam.org/doi/10.1137/S106482759732455X
+
+A single time step of the CT method consists of the following steps:
+
+    0) Start with Q_{MHD}^{n} and Q_{A}^{n}
+
+    1) Build the right hand sides of both semi-discrete systems
+
+        Q_{MHD}^{*} = Q_{MHD}^{n} + ∆t \mathcal{L}(Q_{MHD}^{n})
+        Q_{A}^{n+1} = Q_{A}^{n}   + ∆t \mathcal{H}(Q_{A}^{n}, \textbf{u}^{n})
+
+        where Q_{MHD}^{*} = (ρ^{n+1}, ρ\textbf{u}^{n+1}, E^{*}, B^{*})
+
+        B^{*} means the predicted magnetic field without satisfying the divergence free constraint
+        E^{*} will be updated based on the option in Step 3
+        
+    2) Correct B^{*} by the magnetic potential Q_{A}^{n+1} at new stage by a discrete curl operator
+
+        B^{n+1} = \nabla \times Q_{A}^{n+1}
+
+    3) Set the total energy density E^{n+1} based on the following options
+
+        Option 1: Keep the total energy conserved
+        E^{n+1} = E^{*}
+
+        Option 2: Keep the pressure the same after the correction of magnetic field
+        E^{n+1} = E^{*} + 0.5(∥B^{n+1}∥^2 - ∥B^{n}∥^2)
+
+        Option 1 gives us energy conservation
+        Option 2 helps preserve the positivity of the pressure for low pressure problems
+
+        In this code we use Option 1
 '''
 
 # Standard Python Libraries
@@ -97,49 +138,55 @@ import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
 import hj_flux as hj              # Compute Hamilton-Jacobi Lax-Friedrichs Flux Vector Splitting
 import ssp_rk as rk               # Strong Stability Preserving Runge-Kutta (SSP-RK3 and SSP-RK4)
 import check_divergence as cd     # Check Divergence
+import save as sv                 # Save Data
 
 def main():
 
     start = time.time()
+    print(f"Started at {time.strftime('%H:%M')}")
 
     # Initialize the Test Problem
     q_sys, a_sys = ic.initial_condition()
- 
-    # Add Ghost Cells
-    q_sys, a_sys = ght.add_ghost_cells(q_sys, a_sys)
-
-    # q_sys_star = q_sys.copy()
-    # q_sys_new = q_sys.copy()
-    # a_sys_new = a_sys.copy()
-
-    # div = np.zeros((cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
-    # div_new = div.copy()
-
-    # Plot Initial Condition
-    # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],cfg.ti)
-    # eplt.plot_all_cons(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],cfg.ti)
-    # eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],cfg.ti)
-    # eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost],cfg.ti)
 
     t = cfg.ti
 
+    nt = 0  # Initialize the time step counter
+
+    ################################################################################################
+    # Saving Results
+    ################################################################################################
+   
     # All Solutions for Movie Making
-    all_solns = []
+    all_q_sys = []
+    all_a_sys = []
     all_t = []
     all_div = []
 
-    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+    all_q_sys.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+    all_a_sys.append(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
     all_t.append(t)
 
-    q_sys = bc.boundary_conditions(q_sys)
+    q_sys = bc.periodic_bc(q_sys)
+    a_sys = bc.ct_periodic_bc(a_sys)
+    
     div = cd.check_divergence(q_sys)
     all_div.append(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
 
+    sv.save_q_sys(q_sys,t)
+    sv.save_a_sys(a_sys,t)
+    sv.save_div(div,t)
+
+    ################################################################################################
+    # Time Integration
+    ################################################################################################
+
     while t < (cfg.tf):
 
+        # eplt.plot_all_prim(q_sys,t)
+
         # Update Boundary Conditions 
-        q_sys = bc.boundary_conditions(q_sys)
-        a_sys = bc.boundary_conditions(a_sys)
+        q_sys = bc.periodic_bc(q_sys)
+        a_sys = bc.ct_periodic_bc(a_sys)
 
         # Compute Time Step ∆t from CFL Condition
         dt = ts.time_step(q_sys,t)
@@ -147,86 +194,40 @@ def main():
         # Check Divergence ∇·B = 0
         div = cd.check_divergence(q_sys)
         
-        # 0. Start with Q^{n}_{MHD} and Q^{n}_{A}
-        #   we have q_sys and a_sys
-
-        # 1. Build the right hand sides of both semi-discrete systems
-        #
-        #   Q^{*}_{MHD} = Q^{n}_{MHD} + ∆t \mathcal{L}(Q^{n}_{MHD})
-        #   Q^{n+1}_{A} = Q^{n}_{A}   + ∆t \mathcal{H}(Q^{n}_{A}, \textbf{u}^{n})
-        #
-        #   where Q^{*}_{MHD} = (ρ^{n+1}, ρ\textbf{u}^{n+1}, E^{*}, B^{*})
-        # for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
-        #     for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):
-
-        #         dbx = (1/(12.0*cfg.dx))*(q_sys[5,j,i-2] - 8.0*q_sys[5,j,i-1] + 8.0*q_sys[5,j,i+1] - q_sys[5,j,i+2])
-        #         dby = (1/(12.0*cfg.dy))*(q_sys[6,j-2,i] - 8.0*q_sys[6,j-1,i] + 8.0*q_sys[6,j+1,i] - q_sys[6,j+2,i])
-        #         div_new[j,i] = dbx + dby
-                
-        #         f_l = lf.lf_flux(np.array([q_sys[:,j,i-3],q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2]]),alphax,1,0,0)
-        #         f_r = lf.lf_flux(np.array([q_sys[:,j,i-2],q_sys[:,j,i-1],q_sys[:,j,i],q_sys[:,j,i+1],q_sys[:,j,i+2],q_sys[:,j,i+3]]),alphax,1,0,0)
-        #         g_l = lf.lf_flux(np.array([q_sys[:,j-3,i],q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i]]),alphay,0,1,0)
-        #         g_r = lf.lf_flux(np.array([q_sys[:,j-2,i],q_sys[:,j-1,i],q_sys[:,j,i],q_sys[:,j+1,i],q_sys[:,j+2,i],q_sys[:,j+3,i]]),alphay,0,1,0)
-
-        #         # Q^{*}_{MHD}
-        #         q_sys_new[:,j,i] = q_sys[:,j,i] - ((dt)/(cfg.dx))*(f_r - f_l)  -  ((dt)/(cfg.dy))*(g_r - g_l) 
-
-        #         Axp, Axm = hj.hj_flux(a_sys[2,j,i-3],a_sys[2,j,i-2],a_sys[2,j,i-1],a_sys[2,j,i],a_sys[2,j,i+1],a_sys[2,j,i+2],a_sys[2,j,i+3],cfg.dx)
-        #         Ayp, Aym = hj.hj_flux(a_sys[2,j-3,i],a_sys[2,j-2,i],a_sys[2,j-1,i],a_sys[2,j,i],a_sys[2,j+1,i],a_sys[2,j+2,i],a_sys[2,j+3,i],cfg.dy)
-
-        #         # Q^{n+1}_{A}
-        #         a_sys_new[2,j,i] = a_sys[2,j,i] - dt*(q_sys[1,j,i]/q_sys[0,j,i])*(Axp + Axm)*0.5 - dt*(q_sys[2,j,i]/q_sys[0,j,i])*(Ayp + Aym)*0.5 \
-        #             + dt*max_vex*(Axp-Axm)*0.5 + dt*max_vey*(Ayp-Aym)*0.5
-    
-        # eplt.plot_all_prim(q_sys_new[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-
-        # q_sys_new = np.copy(q_sys_star)
-        # q_sys_new = bc.boundary_conditions(q_sys_new)
-        # a_sys_new = bc.boundary_conditions(a_sys_new)
-
-        # 2. Correct B^{*} by the magnetic potential Q^{n+1}_{A} at new stage by a discrete curl operator
-        # for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
-        #     for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):
-        #         q_sys_new[5,j,i] = (1/(12.0*cfg.dy))*(a_sys_new[2,j-2,i] - 8.0*a_sys_new[2,j-1,i] + 8.0*a_sys_new[2,j+1,i] - a_sys_new[2,j+2,i]) 
-        #         q_sys_new[6,j,i] = (1/(12.0*cfg.dx))*(a_sys_new[2,j,i+2] - 8.0*a_sys_new[2,j,i+1] + 8.0*a_sys_new[2,j,i-1] - a_sys_new[2,j,i-2])
-
-        # q_sys = np.copy(q_sys_new)
-        # a_sys = np.copy(a_sys_new)
-        # div = np.copy(div_new)
-
-        # 3. Set the total energy density E^{n+1} via Option 1
-        #    where E^{n+1} = E^{*}
-
-        # q_sys, a_sys = rk.fe(q_sys, a_sys, dt)
-        q_sys, a_sys = rk.rk3(q_sys, a_sys, dt)
+        q_sys, a_sys = rk.ct_rk3(q_sys, a_sys, dt)
 
         # Update Time Step
         t += dt
         
-        # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-        # eplt.plot_all_cons(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-        # eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-        
         # All Solutions for Movie Making
-        # if t != cfg.tf:
-        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+        all_q_sys.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+        all_a_sys.append(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
         all_t.append(t)
         all_div.append(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
+
+        nt += 1  # Increment the time step counter
+
+        # Print every 20 time steps
+        if nt % 20 == 0:
+            print(f"Step: {nt}, Time: {t:.2f}")
 
 
     print(f"Finished after {time.time() - start:.5f} seconds")
     
-    # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-    # eplt.plot_all_cons(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-    # eplt.plot_mag_pot(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-        
-    # eplt.plot_soln(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
-    # eplt.plot_1D(q_sys[:, cfg.nx2//2, cfg.nghost:-cfg.nghost],cfg.ti)
+    sv.save_q_sys(q_sys,t)
+    sv.save_a_sys(a_sys,t)
+    sv.save_div(div,t)
 
-    # print("let's make some movies!")
-    eplt.movie_maker_div(all_div,all_t)
-    eplt.movie_maker_all_prim(all_solns,all_t)
-    # eplt.movie_maker_all_cons(all_solns,all_t)
+    # Convert lists to arrays
+    all_q_sys_array = np.array(all_q_sys)
+    all_a_sys_array = np.array(all_a_sys)
+    all_t_array = np.array(all_t)
+    all_div_array = np.array(all_div)
+
+    # Save arrays to a compressed .npz file
+    filename = f'simulation_data/result_{cfg.nx1}_by_{cfg.nx2}.npz'
+    np.savez(filename, all_q_sys=all_q_sys_array, all_a_sys=all_a_sys_array, all_t=all_t_array, all_div=all_div_array)
+    print('Done!')
 
 if __name__ == "__main__":
     main()
