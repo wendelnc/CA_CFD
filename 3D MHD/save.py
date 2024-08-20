@@ -13,7 +13,7 @@ def save_q_sys(q_sys,t):
 
     format_spec = "{:13.16e} "
 
-    filename = f"results/q_sys_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
+    filename = f"results/txt_files/q_sys_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
     
     with open(filename, "w") as file:
         for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
@@ -35,7 +35,7 @@ def save_a_sys(a_sys,t):
 
     format_spec = "{:13.16e}"
 
-    filename = f"results/a_sys_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
+    filename = f"results/txt_files/a_sys_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
     with open(filename, "w") as file:
         for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
             for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):
@@ -51,7 +51,7 @@ def save_div(div,t):
 
     format_spec = "{:13.16e}"
 
-    filename = f"results/div_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
+    filename = f"results/txt_files/div_at_time_{t}_for_{cfg.nx1}_by_{cfg.nx2}_by_{cfg.nx3}.txt"
     with open(filename, "w") as file:
         for i in range(cfg.nx1):
             for j in range(cfg.nx2):

@@ -8,7 +8,7 @@ import configuration as cfg      # Input Parameters
 # @njit
 def check_divergence(q_sys):
 
-    div = np.zeros((cfg.nx3+(2*cfg.nghost),cfg.nx2+(2*cfg.nghost),cfg.nx1+(2*cfg.nghost)))
+    div = np.zeros((cfg.nx1+(2*cfg.nghost),cfg.nx2+(2*cfg.nghost),cfg.nx3+(2*cfg.nghost)))
 
     for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
         for j in range(cfg.nghost,(cfg.nx2)+cfg.nghost):

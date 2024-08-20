@@ -8,8 +8,8 @@ import numpy as np
 ####################################################################################################
 
 # case = 0  # Smooth Alfven Waves NOT ADDED YET  
-# case = 1    # Orszag-Tang Vortex 
-case = 2    # 3D Field Loop
+case = 1    # Orszag-Tang Vortex 
+# case = 2    # 3D Field Loop
 
 ####################################################################################################
 # Input Data
@@ -19,7 +19,7 @@ case = 2    # 3D Field Loop
 ti = 0.0; tf = 1.0
 
 # Courant-Friedrichs-Lewy (CFL) condition
-CFL = 0.1
+CFL = 0.5
 
 # Heat Capacity Ratio
 gamma = 5.0/3.0
@@ -27,9 +27,9 @@ gamma = 5.0/3.0
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
 # nx1 = 8;     nx2 = 8;    nx3 = 8
-# nx1 = 16;     nx2 = 16;    nx3 = 16
+nx1 = 16;     nx2 = 16;    nx3 = 16
 # nx1 = 32;     nx2 = 32;    nx3 = 32
-nx1 = 64;     nx2 = 64;    nx3 = 64
+# nx1 = 64;     nx2 = 64;    nx3 = 64
 # nx1 = 128;     nx2 = 128;    nx3 = 128
 # nx1 = 256;     nx2 = 256;    nx3 = 256
 

@@ -7,7 +7,6 @@ import configuration as cfg       # Input Parameters
 import boundary_conditions as bc  # Update Boundary Conditions
 import eigenvalues as ev          # Compute Eigenvalues
 import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
-import qi_lf_flux as qlf            # Compute Lax-Friedrichs Flux Vector Splitting
 
 def mathcal_L(q_sys):
     '''
@@ -20,7 +19,7 @@ def mathcal_L(q_sys):
 
     alpha = ev.eigenvalues(q_sys)
 
-    for i in range(cfg.nghost,(cfg.nx1+1)+cfg.nghost):
+    for i in range(cfg.nghost,(cfg.nx1)+cfg.nghost):
         f_l = lf.lf_flux(np.array([q_sys[:,i-3],q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2]]),alpha, 1, 0, 0)
         f_r = lf.lf_flux(np.array([q_sys[:,i-2],q_sys[:,i-1],q_sys[:,i],q_sys[:,i+1],q_sys[:,i+2],q_sys[:,i+3]]),alpha, 1, 0, 0)
         q_new[:,i] = (f_r - f_l) / cfg.dx  

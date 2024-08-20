@@ -16,10 +16,10 @@ import cons2prim as c2p           # Convert Conserved to Primitive Variables
 
 
 def main():
-    # nx1 = 16;     nx2 = 16;    nx3 = 16
-    nx1 = 32;     nx2 = 32;    nx3 = 32
+    nx1 = 16;     nx2 = 16;    nx3 = 16
+    # nx1 = 32;     nx2 = 32;    nx3 = 32
     
-    filename = f'simulation_data/CFL_0.1_tf_1.0__result_{nx1}_by_{nx2}_by_{nx3}.npz'
+    filename = f'results/simulation_data/result_{nx1}_by_{nx2}_by_{nx3}.npz'
     data = np.load(filename)
     
     all_q_sys = data['all_q_sys']
@@ -28,11 +28,11 @@ def main():
     all_div = data['all_div']
 
     # movie_maker_mag(all_q_sys,all_a_sys,all_t)
-    # movie_maker_div(all_div,all_t)
+    movie_maker_div(all_div,all_t)
     # plot_slice(all_q_sys[-1],all_a_sys[-1])
-    plot_slice2(all_q_sys[0],all_q_sys[-1])
-    plot_div(all_div[-1])
-    print('Done!')
+    # plot_slice2(all_q_sys[0],all_q_sys[-1])
+    # plot_div(all_div[-1])
+    # print('Done!')
 
 def plot_slice2(q1,q2):
 
@@ -204,7 +204,7 @@ def movie_maker_mag(all_q_sys,all_a_sys,all_t):
     # Create the animation using matplotlib's FuncAnimation
     ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=100)
 
-    folder_path = os.path.join(os.getcwd(), "animations")
+    folder_path = os.path.join(os.getcwd(), "results/animations")
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     file_path = os.path.join(folder_path, movie_title)
@@ -277,7 +277,7 @@ def movie_maker_div(all_div,all_t):
     # Create the animation using matplotlib's FuncAnimation
     ani = animation.FuncAnimation(fig, animate, frames=n_steps, interval=100)
 
-    folder_path = os.path.join(os.getcwd(), "animations")
+    folder_path = os.path.join(os.getcwd(), "results/animations")
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     file_path = os.path.join(folder_path, movie_title)

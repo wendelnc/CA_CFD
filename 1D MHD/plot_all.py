@@ -1,14 +1,31 @@
 # Standard Python Libraries
 import os
-import datetime
 import numpy as np
 import pandas as pd
+import datetime
 from time import time, sleep
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from numba import njit
+
 
 # User Defined Libraries
-import configuration as cfg
+import configuration as cfg       # Input Parameters
+import cons2prim as c2p           # Convert Conserved to Primitive Variables
+
+
+def main():
+    
+    nx1 = 512   
+    
+    filename = f'results/simulation_data/result_{nx1}.npz'
+    data = np.load(filename)
+    
+    all_q_sys = data['all_q_sys']
+    all_t = data['all_t']
+
+    movie_maker(all_q_sys,all_t)
 
 def load_exact(case):
     '''
@@ -54,83 +71,6 @@ def load_exact(case):
     grid = np.linspace(-1, 1, len(den))
 
     return den, vex, vey, vez, pre, Bx, By, Bz, grid
-
-def plot_solution(q_sys,t):
-
-    '''
-    Function Name:      plot_solution
-    Creator:            Carolyn Wendeln
-    Date Created:       02-15-2023
-    Date Last Modified: 05-01-2023
-
-    Definition:         plot_solution plots the density, pressure, x velocity
-                        y velocity, B_y and E for the MHD Equaitons
-
-    Inputs:             q_sys: conserved variables
-                        t: current time step
-
-    Outputs:            image of the solution at given time step
-
-    Dependencies:       none
-    '''
-
-    exact_den, exact_vex, exact_vey, exact_vez, exact_pre, exact_Bx, exact_By, exact_Bz, exact_grid = load_exact(cfg.case)
-    exact_E = exact_pre / (cfg.gamma - 1.) + 0.5 * exact_den * (exact_vex**2 + exact_vey**2 + exact_vez**2) + 0.5 * (exact_Bx**2 + exact_By**2 + exact_Bz**2)
-    
-    rho = q_sys[0,:]
-    vex = q_sys[1,:]/q_sys[0,:]
-    vey = q_sys[2,:]/q_sys[0,:]
-    vez = q_sys[3,:]/q_sys[0,:]
-    E = q_sys[4,:]
-    Bx = q_sys[5,:]
-    By = q_sys[6,:]
-    Bz = q_sys[7,:]
-    pre = (cfg.gamma-1.)*(E - 0.5*rho*(vex**2 + vey**2 + vez**2) - 0.5*(Bx**2 + By**2 + Bz**2))
-
-    fig, plots = plt.subplots(2, 3, figsize=(18, 8))
-
-    fig.suptitle('Solution at t = %.3f' % t)
-
-    # Top Left Plot
-    plots[0][0].plot(exact_grid,exact_den,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[0][0].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],rho,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[0][0].set_ylabel('Density')
-    plots[0][0].legend()
-
-    # Bottom Left Plot
-    plots[1][0].plot(exact_grid,exact_pre,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[1][0].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],pre,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[1][0].set_xlabel('x')
-    plots[1][0].set_ylabel('Pressure')
-    plots[1][0].legend()
-
-    # Top Middle Plot
-    plots[0][1].plot(exact_grid,exact_vex,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[0][1].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],vex,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[0][1].set_ylabel('X Velocity')
-    plots[0][1].legend()
-
-    # Bottom Middle Plot
-    plots[1][1].plot(exact_grid,exact_vey,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[1][1].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],vey,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[1][1].set_xlabel('x')
-    plots[1][1].set_ylabel('Y Velocity')
-    plots[1][1].legend()
-
-    # Top Right Plot
-    plots[0][2].plot(exact_grid,exact_By,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[0][2].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],By,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[0][2].set_ylabel('Y Magnetic Field')
-    plots[0][2].legend()
-
-    # Bottom Right Plot
-    plots[1][2].plot(exact_grid,exact_E,color = 'gold', linestyle='-',linewidth=2.5,label='Qi Soln.')
-    plots[1][2].plot(cfg.xgrid[cfg.nghost:-cfg.nghost],E,color = 'crimson', linestyle='-',linewidth=1.0,label='Approx.')
-    plots[1][2].set_xlabel('x')
-    plots[1][2].set_ylabel('Total Energy')
-    plots[1][2].legend()
-
-    plt.show()
 
 def movie_maker(all_solns,all_t):
     '''
@@ -298,3 +238,7 @@ def movie_maker(all_solns,all_t):
     
     ani.save(file_path,writer='ffmpeg', dpi=500)
 
+
+
+if __name__ == "__main__":
+    main()

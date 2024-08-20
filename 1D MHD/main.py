@@ -68,24 +68,29 @@ https://www3.nd.edu/~zxu2/acms60790S13/Shu-WENO-notes.pdf
 '''
 
 # Standard Python Libraries
+import os
 import time
 import numpy as np
 
 # User Defined Libraries (not all needed, but all defined here)
-import configuration as cfg       # Input Parameters
-import init as ic                 # Initialize Test Problem
-import plotting as eplt           # Plotting Solution
-import ghost as ght               # Add Ghost Cells
 import boundary_conditions as bc  # Update Boundary Conditions
-import eigenvalues as ev          # Compute Eigenvalues
-import time_step as ts            # Compute Time Step
+import configuration as cfg       # Input Parameters
 import cons2prim as c2p           # Convert Conserved to Primitive Variables
+import eigenvalues as ev          # Compute Eigenvalues
 import get_flux as gf             # Compute Flux
-import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2})
+import ghost as ght               # Add Ghost Cells
+import init as ic                 # Initialize Test Problem
+import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
+import plot_all as pa             # Plots Saved .npz Files in Results Folder
+import plotting as eplt           # Plotting Solution During Simulation
+import save as sv                 # Save Data
 import set_rght_eigEntropy as rev # Compute Right Eigenvectors
 import set_rght_eigEntropy as lev # Compute Left Eigenvectors
-import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
 import ssp_rk as rk               # Strong Stability Preserving Runge-Kutta (SSP-RK3 and SSP-RK4)
+import time_step as ts            # Compute Time Step
+import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2})
+import weno as wn                 # Compute WENO Reconstruction (old version)
+import weno5 as wn5               # Compute WENO Reconstruction
 
 def main():
 
@@ -94,20 +99,34 @@ def main():
     # Initialize the Test Problem
     q_sys = ic.initial_condition()
 
-    # Add Ghost Cells
-    q_sys = ght.add_ghost_cells(q_sys)
-    q_new = q_sys.copy()
-
-    # Plot Initial Condition
-    # eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],cfg.ti)
-
     t = cfg.ti
 
-    # All Solutions for Movie Making
-    all_solns = []
+    nt = 0  # Initialize the time step counter
+
+    ################################################################################################
+    # Saving Results
+    ################################################################################################
+
+    os.makedirs('results', exist_ok=True)
+    os.makedirs(os.path.join('results', 'animations'), exist_ok=True) 
+    os.makedirs(os.path.join('results', 'simulation_data'), exist_ok=True)
+    os.makedirs(os.path.join('results', 'txt_files'), exist_ok=True)
+
+    # All solutions for making movies and saving entire simulations
+    all_q_sys = []
     all_t = []
-    all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+    all_q_sys.append(q_sys[:,cfg.nghost:-cfg.nghost])
     all_t.append(t)
+    
+    # Save initial condition as text files in results/txt_files folder
+    sv.save_q_sys(q_sys,t)
+
+    ################################################################################################
+    # Time Integration
+    ################################################################################################
+
+    # Plot the Initial Condition
+    eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],t)
 
     while t < (cfg.tf):
         
@@ -117,33 +136,40 @@ def main():
         # Compute Time Step ∆t from CFL Condition
         dt = ts.time_step(q_sys,t)
 
-        # SSP-RK4 Time Integration Scheme
-        q_sys = rk.rk4(q_sys, dt)
+        # SSP-RK Time Integration Scheme
+        q_sys = rk.rk3(q_sys, dt)
          
         # Update Time Step
         t += dt
 
-        # All Solutions for Movie Making
-        all_solns.append(q_sys[:,cfg.nghost:-cfg.nghost])
+        # All solutions for making movies and saving entire simulations
+        all_q_sys.append(q_sys[:,cfg.nghost:-cfg.nghost])
         all_t.append(t)
+
+        nt += 1  # Increment the time step counter
+
+        # Print every 20 time steps
+        if nt % 20 == 0:
+            print(f"Step: {nt}, Time: {t:.2f}")
 
 
     print(f"Finished after {time.time() - start:.5f} seconds")
 
+    # Plot the Final Solution
     eplt.plot_solution(q_sys[:, cfg.nghost:-cfg.nghost],t)
 
-    # rho, vex, vey, vez, pre, Bx, By, Bz = c2p.cons2prim(q_sys[:, cfg.nghost:-cfg.nghost])
-    # print("den = np.array({})".format(rho.tolist()))
-    # print("vex = np.array({})".format(vex.tolist()))
-    # print("vey = np.array({})".format(vey.tolist()))
-    # print("vez = np.array({})".format(vez.tolist()))
-    # print("pre = np.array({})".format(pre.tolist()))
-    # print("Bx = np.array({})".format(Bx.tolist()))
-    # print("By = np.array({})".format(By.tolist()))
-    # print("Bz = np.array({})".format(Bz.tolist()))
+    # Save final condition as text files in results/txt_files folder
+    sv.save_q_sys(q_sys,t)
 
-    print("let's make a movie!")
-    eplt.movie_maker(all_solns,all_t)
+    # Convert lists to arrays
+    all_q_sys_array = np.array(all_q_sys)
+    all_t_array = np.array(all_t)
+
+    # Save arrays to a compressed .npz file
+    filename = f'results/simulation_data/result_{cfg.nx1}.npz'
+    np.savez(filename, all_q_sys=all_q_sys_array, all_t=all_t_array)
+    print('Simulation Saved')
+    print('Done!')
 
 if __name__ == "__main__":
     main()

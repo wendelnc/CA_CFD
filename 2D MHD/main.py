@@ -118,27 +118,32 @@ A single time step of the CT method consists of the following steps:
 '''
 
 # Standard Python Libraries
+import os
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 
 # User Defined Libraries (not all needed, but all defined here)
-import configuration as cfg       # Input Parameters
-import init as ic                 # Initialize Test Problem
-import plotting as eplt           # Plotting Solution
-import ghost as ght               # Add Ghost Cells
 import boundary_conditions as bc  # Update Boundary Conditions
-import time_step as ts            # Compute Time Step
+import check_divergence as cd     # Check Divergence
+import configuration as cfg       # Input Parameters
 import cons2prim as c2p           # Convert Conserved to Primitive Variables
+import eigenvalues as ev          # Compute Eigenvalues
 import get_flux as gf             # Compute Flux
-import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2})
+import ghost as ght               # Add Ghost Cells
+import hj_flux as hj              # Compute Hamilton-Jacobi Lax-Friedrichs Flux Vector Splitting
+import init as ic                 # Initialize Test Problem
+import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
+import plot_all as pa             # Plots Saved .npz Files in Results Folder
+import plotting as eplt           # Plotting Solution During Simulation
+import save as sv                 # Save Data
 import set_rght_eigEntropy as rev # Compute Right Eigenvectors
 import set_rght_eigEntropy as lev # Compute Left Eigenvectors
-import lf_flux as lf              # Compute Lax-Friedrichs Flux Vector Splitting
-import hj_flux as hj              # Compute Hamilton-Jacobi Lax-Friedrichs Flux Vector Splitting
 import ssp_rk as rk               # Strong Stability Preserving Runge-Kutta (SSP-RK3 and SSP-RK4)
-import check_divergence as cd     # Check Divergence
-import save as sv                 # Save Data
+import time_step as ts            # Compute Time Step
+import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2})
+import weno as wn                 # Compute WENO Reconstruction (old version)
+import weno5 as wn5               # Compute WENO Reconstruction
 
 def main():
 
@@ -155,8 +160,13 @@ def main():
     ################################################################################################
     # Saving Results
     ################################################################################################
-   
-    # All Solutions for Movie Making
+
+    os.makedirs('results', exist_ok=True)
+    os.makedirs(os.path.join('results', 'animations'), exist_ok=True) 
+    os.makedirs(os.path.join('results', 'simulation_data'), exist_ok=True)
+    os.makedirs(os.path.join('results', 'txt_files'), exist_ok=True)
+
+    # All solutions for making movies and saving entire simulations
     all_q_sys = []
     all_a_sys = []
     all_t = []
@@ -168,10 +178,11 @@ def main():
 
     q_sys = bc.periodic_bc(q_sys)
     a_sys = bc.ct_periodic_bc(a_sys)
-    
+
     div = cd.check_divergence(q_sys)
     all_div.append(div[cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
 
+    # Save initial condition as text files in results/txt_files folder
     sv.save_q_sys(q_sys,t)
     sv.save_a_sys(a_sys,t)
     sv.save_div(div,t)
@@ -180,9 +191,10 @@ def main():
     # Time Integration
     ################################################################################################
 
-    while t < (cfg.tf):
+    # Plot the Initial Condition
+    # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
 
-        # eplt.plot_all_prim(q_sys,t)
+    while t < (cfg.tf):
 
         # Update Boundary Conditions 
         q_sys = bc.periodic_bc(q_sys)
@@ -199,7 +211,7 @@ def main():
         # Update Time Step
         t += dt
         
-        # All Solutions for Movie Making
+        # All solutions for making movies and saving entire simulations
         all_q_sys.append(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
         all_a_sys.append(a_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost])
         all_t.append(t)
@@ -213,7 +225,11 @@ def main():
 
 
     print(f"Finished after {time.time() - start:.5f} seconds")
-    
+
+    # Plot the Final Solution
+    # eplt.plot_all_prim(q_sys[:,cfg.nghost:-cfg.nghost,cfg.nghost:-cfg.nghost],t)
+
+    # Save final condition as text files in results/txt_files folder
     sv.save_q_sys(q_sys,t)
     sv.save_a_sys(a_sys,t)
     sv.save_div(div,t)
@@ -225,8 +241,9 @@ def main():
     all_div_array = np.array(all_div)
 
     # Save arrays to a compressed .npz file
-    filename = f'simulation_data/result_{cfg.nx1}_by_{cfg.nx2}.npz'
+    filename = f'results/simulation_data/result_{cfg.nx1}_by_{cfg.nx2}.npz'
     np.savez(filename, all_q_sys=all_q_sys_array, all_a_sys=all_a_sys_array, all_t=all_t_array, all_div=all_div_array)
+    print('Simulation Saved')
     print('Done!')
 
 if __name__ == "__main__":

@@ -92,25 +92,3 @@ def reflective_bc(q_sys):
     
     return q_sys
 
-def boundary_conditions(q_sys, a_sys):
-    '''
-    Function Name:      boundary_conditions
-    Creator:            Carolyn Wendeln
-    Date Created:       02-15-2023
-    Date Last Modified: 04-02-2024
-
-    Definition:         Updates boundary conditions based on the type
-
-    Inputs:             q_sys, a_sys
-
-    Outputs:            updated q_sys & a_sys based on boundary conditions
-
-    Dependencies:       None
-    '''
-
-    if cfg.case == 1:
-        q_sys = periodic_bc(q_sys)
-        a_sys = periodic_bc(a_sys)
-    
-        
-    return q_sys, a_sys

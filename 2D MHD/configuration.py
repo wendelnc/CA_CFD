@@ -8,8 +8,8 @@ import numpy as np
 ####################################################################################################
 
 # 2D MHD Test Problems
-case = 0 # Smooth Alfven Wave
-# case = 1 # Orszag-Tang Vortex 
+# case = 0 # Smooth Alfven Wave
+case = 1 # Orszag-Tang Vortex 
 # case = 2 # Orszag-Tang Vortex (Princeton) 
 
 # 1D MHD Test Problems
@@ -23,16 +23,17 @@ case = 0 # Smooth Alfven Wave
 ti = 0.0; tf = 1.0
 
 # Courant-Friedrichs-Lewy (CFL) condition
-CFL = 0.1
+CFL = 0.5
 
 # Heat Capacity Ratio
 gamma = 5.0/3.0
 
 # Number of Spatial Itterations
 #x-direction; y-direction; z-direction
+nx1 = 32;       nx2 = 32;    nx3 = 32
 # nx1 = 16;     nx2 = 32;    nx3 = 32
 # nx1 = 32;     nx2 = 64;    nx3 = 64
-nx1 = 64;     nx2 = 128;   nx3 = 128
+# nx1 = 64;     nx2 = 128;   nx3 = 128
 # nx1 = 128;    nx2 = 256;   nx3 = 256
 
 # Number of Ghost Cells

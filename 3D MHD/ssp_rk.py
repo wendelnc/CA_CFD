@@ -128,7 +128,7 @@ def afterstep(q_sys,a_sys):
                                - (1/(12.0*cfg.dy))*(a_sys[0,i,j-2,k] - 8.0*a_sys[0,i,j-1,k] + 8.0*a_sys[0,i,j+1,k] - a_sys[0,i,j+2,k])
     return q_new
 
-def fe(q_sys,a_sys,dt):
+def ct_fe(q_sys,a_sys,dt):
     
     # 0. Start with Q^{n}_{MHD} and Q^{n}_{A}
 
@@ -139,7 +139,7 @@ def fe(q_sys,a_sys,dt):
         #
         #   where Q^{*}_{MHD} = (ρ^{n+1}, ρ\textbf{u}^{n+1}, E^{*}, B^{*})
     q_star = q_sys + dt*mathcal_L(q_sys)
-    a_new = a_sys + dt*mathcal_H(a_sys,q_sys)
+    a_new = a_sys + dt*mathcal_H(a_sys,q_sys,dt)
     
     # 2. Correct B^{*} by the magnetic potential Q^{n+1}_{A} at new stage by a discrete curl operator
     q_new = afterstep(q_star,a_new)
@@ -163,7 +163,7 @@ def rk3(q_sys,a_sys,dt):
 
     return q_new, a_new
 
-def ct_rk3(q_sys,a_z,dt):
+def ct_rk3(q_sys,a_sys,dt):
     '''
     Equation (2.18) from the following paper:
     "Efficient Implementation of Essentially Non-Oscillatory Shock Capturing Schemes"
@@ -172,17 +172,17 @@ def ct_rk3(q_sys,a_z,dt):
     
     # q1 = q_sys + dt*mathcal_L(q_sys)
     q1_star = q_sys + dt*mathcal_L(q_sys)
-    a1 = a_z + dt*mathcal_H(a_z,q_sys,dt)
+    a1 = a_sys + dt*mathcal_H(a_sys,q_sys,dt)
     q1 = afterstep(q1_star,a1)
 
     # q2 = ((3/4)*q_sys) + ((1/4)*q1) + ((1/4)*dt*mathcal_L(q1))
     q2_star = ((3/4)*q_sys) + ((1/4)*q1) + ((1/4)*dt*mathcal_L(q1))
-    a2 = ((3/4)*a_z) + ((1/4)*a1) + ((1/4)*dt*mathcal_H(a1,q1,dt))
+    a2 = ((3/4)*a_sys) + ((1/4)*a1) + ((1/4)*dt*mathcal_H(a1,q1,dt))
     q2 = afterstep(q2_star,a2)
 
     # q_new = ((1/3)*q_sys) + ((2/3)*q2) + ((2/3)*dt*mathcal_L(q2))
     q_new_star = ((1/3)*q_sys) + ((2/3)*q2) + ((2/3)*dt*mathcal_L(q2))
-    a_new = ((1/3)*a_z) + ((2/3)*a2) + ((2/3)*dt*mathcal_H(a2,q2,dt))
+    a_new = ((1/3)*a_sys) + ((2/3)*a2) + ((2/3)*dt*mathcal_H(a2,q2,dt))
     q_new = afterstep(q_new_star,a_new)
 
     return q_new, a_new

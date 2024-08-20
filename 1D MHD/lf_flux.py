@@ -10,7 +10,6 @@ import w_half as wh               # Compute w_{i+1/2} (or w_{i-1/2}
 import set_rght_eigEntropy as rev # Compute Right Eigenvectors
 import set_left_eigEntropy as lev # Compute Left Eigenvectors
 import weno as wn                 # Compute WENO Reconstruction
-import weno_hj as wnhj            # Compute Hamilton–Jacobi WENO Reconstruction
 import weno5 as wn5               # Compute Standard WENO Reconstruction
 
 # @njit
@@ -98,9 +97,7 @@ def lf_flux(q_arr,alpha,nx,ny,nz):
 
     # NEW Standard WENO 
     # These should give the same result, they just use different stencils
-    g_plus_half = wn5.weno5(gp0,gp1,gp2,gp3,gp4)
-    g_min_half  = wn5.weno5(gm5,gm4,gm3,gm2,gm1)
-    g_half = g_min_half + g_plus_half
+    g_half = wn5.weno5(gp0,gp1,gp2,gp3,gp4) + wn5.weno5(gm5,gm4,gm3,gm2,gm1)
 
     # (f) Project the numerical flux back to the conserved variables
 
